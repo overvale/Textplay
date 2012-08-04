@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+
+  <Content>
+    <Paragraph Type="Action">
+      <Text>FADE IN:</Text>
+    </Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. APARTMENT - DAY</Text>
+    </Paragraph>
+    <Paragraph Type="Action">
+      <Text>This is </Text>
+      <Text Style="Bold">action</Text>
+      <Text>.</Text>
+    </Paragraph>
+	<Paragraph><ScriptNote><Text>This is a comment.</Text></ScriptNote></Paragraph>
+	<Paragraph Type="Action">
+      <Text>This is <span Style="Bold">action</span>.</Text>
+    </Paragraph>
+    <Paragraph Type="Character">
+      <Text>Character</Text>
+    </Paragraph>
+    <Paragraph Type="Parenthetical">
+      <Text>(parenthetical)</Text>
+    </Paragraph>
+    <Paragraph Type="Dialogue">
+      <Text Style="Underline">Dialogue</Text>
+      <Text>.</Text>
+    </Paragraph>
+    <Paragraph Type="Transition">
+      <Text>CUT TO:</Text>
+    </Paragraph>
+    <Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>
+    <Paragraph Type="Scene Heading">
+      <Text>INT. APARTMENT - DAY</Text>
+    </Paragraph>
+  </Content>
+</FinalDraft>
