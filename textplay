@@ -616,4 +616,4 @@ else
 	end
 end
 
-system 'terminal-notifier -message "Your screenplay conversion is finished." -title "Textplay"'
+# system 'terminal-notifier -message "Your screenplay conversion is finished." -title "Textplay"'
