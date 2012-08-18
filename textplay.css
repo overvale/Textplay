@@ -1,0 +1,171 @@
+/* ---------- PAGE STYLES ---------- */
+
+/* all page margins are maximums */
+@page {
+size: 8.5in 11in;
+margin-top:1in;
+margin-right:1in;
+margin-bottom:.5in;
+margin-left:1.5in;
+}
+/* This makes the page-counter start on the first page of the screenplay */
+div#screenplay {
+counter-reset: page 1;
+page: Screenplay;
+prince-page-group: start;
+}
+@page Screenplay {
+/* Page Numbers */
+@top-right-corner {
+font: 12pt "courier";
+content: counter(page)".";
+vertical-align: bottom;
+padding-bottom: 1em;
+}
+/* Define Header */
+@top-left {
+content: "";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align: bottom;
+padding-bottom: 1.3em;
+}
+/* Define Footer */
+@bottom-left {
+content: "";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align:top;
+padding-top:0;
+}
+}
+/* removes the header and page-numbers from the first page */
+@page Screenplay:first {
+@top-right-corner { content: normal; }
+@top-left { content: normal; }
+}
+/* These control where page-breaks can and cannot happen */
+p {
+orphans: 2;
+widows: 2;
+}
+dl {
+page-break-inside:avoid;
+}
+dt, h2, h5 {
+page-break-after: avoid;
+}
+dd.parenthetical {
+orphans: 3;
+widows: 3;
+page-break-before: avoid;
+page-break-after: avoid;
+}
+dd {
+page-break-before:avoid;
+}
+div.page-break {
+page-break-after:always;
+}
+
+/* by default Prince bookmarks all headings, no thanks */
+h3, h4, h5, h6 {
+prince-bookmark-level: none;
+}
+
+/* ---------- COMMON LAYOUT ---------- */
+
+body {
+font-family: "Courier";
+font-size: 12pt;
+line-height: 1;
+}
+#screenplay {
+width: 6in;
+margin:0 auto;
+}
+p.center {
+text-align:center;
+margin-left:0;
+width:100%;
+}
+p {
+margin-top:12pt;
+margin-bottom:12pt;
+margin-left:0;
+width:auto;
+white-space: pre-wrap;
+}
+	 
+/*Character Names*/
+	 
+dt {
+font-weight:normal;
+margin-top:1em;
+margin-left:2in;
+width:4in;
+}
+	 
+/*Parentheticals*/
+	 
+dd.parenthetical {
+margin-left:1.6in;
+text-indent:-.12in;
+width: 2in;
+}
+	 
+/*Dialogue*/
+	 
+dd {
+margin:0;
+margin-left: 1in;
+width: 3.5in;
+line-height: inherit;
+}
+	 
+/* Sluglines and Transitions */
+	 
+h1,h2,h3,h4,h5,h6 {
+font-weight: normal;
+font-size: 12pt;
+margin-top: 1em;
+margin-bottom: 1em;
+text-transform:uppercase;
+}
+	 
+/* Full Sluglines */
+	 
+h2 {
+width: inherit;
+margin-top: 12pt;
+margin-bottom: 12pt;
+margin-left: 0;
+text-decoration:none;
+font-weight: bold;
+}
+	 
+/* Right Transitions */
+	 
+h3 {
+margin-left: 4in;
+width: 2in;
+}
+	 
+/* Left Transitions */
+	 
+h4 {
+
+}
+	 
+/* Goldman Sluglines */
+	 
+h5 {
+font-weight: bold;
+}
+	 
+span.underline {
+text-decoration:underline;
+}
+.comment {
+display:none
+}
