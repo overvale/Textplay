@@ -7,7 +7,7 @@ Textplay has been tested against fountain documents rigorously but it is not per
 
 ## Command-line interface
 
-Textplay was built using Mac OS 10.6/7 and Ruby 1.8.7. I have only tested it in this environment, if you want to run Textplay in another environment (such as Windows) you may have to modify the code.
+Textplay was built using Mac OS 10.6-8 and Ruby 1.8.7. I have only tested it in this environment, if you want to run Textplay in another environment (such as Windows) you may have to modify the code.
 
 Calling Textplay from the command-line is simple:
 
@@ -23,6 +23,10 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 * `--help` does what you think it does.
 * `--fdx` converts the file to FDX instead of HTML.
 * `--pdf` converts the file to PDF (PrinceXML must be installed on your system).
+
+## HTML Snippets
+
+Included here is the `textplay_snippet`, a script that converts inputted text to its HTML equivalent. It does not include anything but the marked-up text. This is useful for things like [BBEdit Text filters](http://bbeditextras.org/wiki/index.php?title=Text_Filters) or [Marked.app](http://markedapp.com).
 
 ## Support for the Fountain Format
 
