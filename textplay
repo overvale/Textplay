@@ -448,8 +448,8 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
 
 # FULLY-FORMED SLUGLINES
 text = text.gsub(/
-# Require leading empty line
-^[\ \t]* \n
+# Require leading empty line - or the beginning of file
+(?i:^\A | ^[\ \t]* \n)
 # Respect leading whitespace
 ^[\ \t]*
 # Standard prefixes, allowing for bold-italic
