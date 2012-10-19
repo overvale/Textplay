@@ -78,6 +78,20 @@
 
 # ------------------------------------------------------------------
 
+# SETTINGS
+
+font = "pitch"
+# font = "courier"
+
+# A great drop-in replacement font for Courier is Pitch.
+# More info on pitch can be found here: http://klim.co.nz/retail-fonts/pitch/
+# Your layout and page-count will be identical to using Courier
+# when using Pitch.
+
+title = "A Screenplay"
+
+# ------------------------------------------------------------------
+
 # HOW TEXTPLAY WORKS
 
 # This script works on your text in 5 phases:
@@ -144,14 +158,14 @@ end
 # ----- PHASE 2 -----------------------------------------------------
 
 # HTML page structure and CSS
-htmlStart = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-"http://www.w3.org/TR/html4/strict.dtd">
+htmlStart = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
+\"http://www.w3.org/TR/html4/strict.dtd\">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title></title>
-<meta name="generator" content="Textplay">
-<style type="text/css" media="all">
+<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">
+<title>#{title}</title>
+<meta name=\"generator\" content=\"Textplay\">
+<style type=\"text/css\" media=\"all\">
 
   /* ---------- PAGE STYLES ---------- */
 
@@ -172,14 +186,14 @@ htmlStart = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
   @page Screenplay {
   /* Page Numbers */
   @top-right-corner {
-  font: 12pt "courier";
-  content: counter(page)".";
+  font: 12pt \"#{font}\", courier;
+  content: counter(page)\".\";
   vertical-align: bottom;
   padding-bottom: 1em;
   }
   /* Define Header */
   @top-left {
-  content: "";
+  content: \"\";
   font: italic 10pt Georgia;
   color: #888;
   vertical-align: bottom;
@@ -187,7 +201,7 @@ htmlStart = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
   }
   /* Define Footer */
   @bottom-left {
-  content: "";
+  content: \"\";
   font: italic 10pt Georgia;
   color: #888;
   vertical-align:top;
@@ -231,7 +245,7 @@ htmlStart = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
   /* ---------- COMMON LAYOUT ---------- */
 
   body {
-  font-family: "Courier";
+  font-family: \"#{font}\", courier;
   font-size: 12pt;
   line-height: 1;
   }
@@ -328,8 +342,8 @@ htmlStart = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 </head>
 <body>
 
-<div id="screenplay">
-'
+<div id=\"screenplay\">
+"
 
 # HTML footer
 htmlEnd = '
@@ -358,21 +372,22 @@ text = text.gsub(/&/, '&#38;')
 text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 
 # -------- fountain escapes
-# Transitions enting in {to:} with a space after
+# force lines ending with {to: } to be action instead of transition
 text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 
-# Caps lines => action - two spaces at end of line
+# escape caps lines => action - two spaces at end of line
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
-# Boneyard and notes
+# Boneyard
+# Perhaps secrets shouldn't be removed completely but programmatically it is
+# too difficult to prevent further xml transformations within these blocks.
 text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
-# Perhaps secrets shouldn't be removed completely but programmatically it is too difficult to prevent further xml transformations within these blocks.
+# Fountain [[notes]]
 text = text.gsub(/\[{2}([^\]\n]+?)\]{2}/,'<note>\1</note>')
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
 text = text.gsub(/^[\ \t]*\>[ \t]*(.*)$/,'<transition>\1</transition>')
-
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
@@ -483,12 +498,12 @@ text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, 
 # This cleans up action paragraphs with line-breaks.
 text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
 
-# Convert tabs to spaces within action
+# Convert tabs to 4 spaces
 text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
 }
 
-# This cleans up dialogue blocks with line-breaks.
+# This cleans up line-breaks within dialogue blocks
 text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
 
@@ -572,10 +587,10 @@ if ARGV[1]
 	elsif options[:pdf] == true
 		# create a new temp file for processing
 		File.open('/tmp/textplay.html', "w+") do |htmlFile|
-  		# place the transformed text in the new file
-  		htmlFile.puts htmlStart
-  		htmlFile.puts text
-  		htmlFile.puts htmlEnd
+		# place the transformed text in the new file
+		htmlFile.puts htmlStart
+		htmlFile.puts text
+		htmlFile.puts htmlEnd
 		  end
 		# run prince
 		system "prince /tmp/textplay.html #{ARGV[1]}"
@@ -598,10 +613,10 @@ else
 	elsif options[:pdf] == true
 		# create a new temp file for processing
 		File.open('/tmp/textplay.html', "w+") do |htmlFile|
-  		# place the transformed text in the new file
-  		htmlFile.puts htmlStart
-  		htmlFile.puts text
-  		htmlFile.puts htmlEnd
+		# place the transformed text in the new file
+		htmlFile.puts htmlStart
+		htmlFile.puts text
+		htmlFile.puts htmlEnd
 			end
 		# run prince on that new file
 		system "prince /tmp/textplay.html; open /tmp/textplay.pdf"
@@ -616,4 +631,5 @@ else
 	end
 end
 
+# if you happen to have Terminal-Notifier on your system, you can enable it here.
 # system 'terminal-notifier -message "Your screenplay conversion is finished." -title "Textplay"'
