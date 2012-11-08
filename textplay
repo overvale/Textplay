@@ -2,7 +2,7 @@
 
 # Textplay -- A plain-text conversion tool for screenwriters
 #
-# Version 0.5
+# Version 0.5.1 - 2012-11-08
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
@@ -80,9 +80,9 @@
 
 # SETTINGS
 
-font = "pitch"
-# font = "courier"
+font = "courier"
 
+# font = "pitch"
 # A great drop-in replacement font for Courier is Pitch.
 # More info on pitch can be found here: http://klim.co.nz/retail-fonts/pitch/
 # Your layout and page-count will be identical to using Courier
@@ -103,18 +103,28 @@ title = "A Screenplay"
 # Phase 3 converts the input text to an interal xml markup in preperation for
 #         further transformation.
 # Phase 4 converts the internal xml markup to the markup requested by the user.
-# Phase 5 dumps the result to STDIN or an output file specified by the user.
+# Phase 5 dumps the result to STDOUT or an output file specified by the user.
 
 # ----- PHASE 1 -----------------------------------------------------
 
 require 'optparse'
+require 'fcntl'
 
 # Setup the options parser
 options = {}
 optparse = OptionParser.new do|opts|
 
 	# This is the help banner, which just explains the command syntax
-	opts.banner = "Usage: textplay [options] input-path [output-path]"
+	opts.banner = "
+Usage: textplay [options] [input-path] [output-path]
+
+- The first argument is always an input-path.
+- The second argument is always an output-path.
+- If there's no output-path textplay prints to `STDOUT` (PDF go to /temp).
+- If there's no input-path textplay reads from `STDIN`.
+
+Options:
+"
 
 	# The default conversion type is HTML, if the '-f' option is set, convert to FDX
 	options[:fdx] = false
@@ -139,20 +149,39 @@ end
 # Parse the options and remove them from ARGV
 optparse.parse!
 
-# If nothing is passed to the command, output the options banner.
-if ARGV.empty?
-	puts optparse
-	exit(-1)
+
+
+# ---------- INPUT / OUTPUT ---------#
+
+# Some of this is redundant but I prefer specifying every contingency in case I need to control each step
+
+# if there's a 2nd argument (output path)
+if ARGV[1]
+
+  # read the first argument as an input file
+  text = File.read(ARGV[0])
+
+# if there's only 1 argument (an input path)
+elsif ARGV[0]
+
+  # read the first argument as an input file
+  text = File.read(ARGV[0])
+
+# if no input and no output
+else
+
+  # check to see if anything is in SDTIN
+  if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+    # if so, read it
+    text = STDIN.read 
+  else
+    # if nothing is in STDIN print the options banner
+    puts optparse
+    exit(-1)
+  end
+
 end
 
-# If there is a second argument (an output-file) defined then read
-# the first argument as input using ARGV. Otherwise, read the first
-# argument as input using ARGF (which allows for STDIN to be read).
-if ARGV[1]
-	text = File.read(ARGV[0])
-else
-	text = ARGF.read
-end
 
 
 # ----- PHASE 2 -----------------------------------------------------
@@ -375,7 +404,7 @@ text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 # force lines ending with {to: } to be action instead of transition
 text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 
-# escape caps lines => action - two spaces at end of line
+# escape caps lines => action - when two spaces are at end of line
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
 # Boneyard
@@ -630,6 +659,3 @@ else
 		puts htmlEnd
 	end
 end
-
-# if you happen to have Terminal-Notifier on your system, you can enable it here.
-# system 'terminal-notifier -message "Your screenplay conversion is finished." -title "Textplay"'

@@ -1,9 +1,9 @@
 Textplay
 ========
 
-Textplay is a simple ruby-script (one file, no dependancies) that converts screenplays written in Fountain formatted plain-text to a variety of useful formats: HTML, FDX (Final Draft), or PDF (with PrinceXML).
+Textplay is a simple ruby-script (one file, no dependancies) that converts screenplays written in Fountain formatted plain-text to a variety of useful formats: HTML, FDX (Final Draft), or PDF ([PrinceXML][prince] required).
 
-Textplay has been tested against fountain documents rigorously but it is not perfect, if you encounter a problem please let me know: [@olivertaylor](http://twitter.com/olivertaylor).
+Textplay has been rigorously tested against fountain documents, but it is not perfect, if you encounter a problem please let me know: [@olivertaylor][tw].
 
 ## Command-line interface
 
@@ -11,22 +11,22 @@ Textplay was built using Mac OS 10.6-8 and Ruby 1.8.7. I have only tested it in 
 
 Calling Textplay from the command-line is simple:
 
-`textplay [options] input-path [output-path]`
+`textplay [options] [input-path] [output-path]`
 
-If no output-path is specified then Textplay passes the results to STDOUT.
-Textplay also accepts STDIN instead of an input-path; when using STDIN you must not specify an output-path - the first argument is always the input-path.
-When converting to PDF, without a specified output-path, Textplay creates the PDF in /tmp and then opens it with your default PDF viewer.
-Options
+- The first argument is always an input-path.
+- The second argument is always an output-path.
+- If there's no output-path textplay prints to `STDOUT` (PDF go to /temp).
+- If there's no input-path textplay reads from `STDIN`.
 
-Textplay has three options you can call in the command line. `--help`, `--fdx`, and `--pdf` (`-h`, `-f`, and `-p` respectively).
+Textplay has three options you can call in the command line. `--help`, `--fdx`, and `--pdf` (`-h`, `-f`, and `-p`respectively).
 
 * `--help` does what you think it does.
 * `--fdx` converts the file to FDX instead of HTML.
-* `--pdf` converts the file to PDF (PrinceXML must be installed on your system).
+* `--pdf` converts the file to PDF ([PrinceXML][prince] must be installed on your system).
 
 ## HTML Snippets
 
-Included here is the `textplay_snippet`, a script that converts inputted text to its HTML equivalent. It does not include anything but the marked-up text. This is useful for things like [BBEdit Text filters](http://bbeditextras.org/wiki/index.php?title=Text_Filters) or [Marked.app](http://markedapp.com).
+`textplaysnip` is an alternate script that converts inputted text to HTML equivalent. It does not include anything but the marked-up text. This is useful for things like [BBEdit Text filters](http://bbeditextras.org/wiki/index.php?title=Text_Filters) or [Marked.app](http://markedapp.com). `textplay.css` is also included should you need it.
 
 ## Support for the Fountain Format
 
@@ -44,6 +44,10 @@ Included here is the `textplay_snippet`, a script that converts inputted text to
 * Title Pages.
 * Empty lines inside [[notes]].
 
-### Q. Why aren't they?
+### Q. Why not?
 
 * I'm not a good enough programmer.
+
+
+[tw]: http://twitter.com/olivertaylor
+[prince]: http://princexml.com
