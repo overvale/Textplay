@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 # This script is based on Textplay [http://olivertaylor.net/textplay]
-# But instead of outputting a full HTML file, this outputs just the marked-up text.
+# Instead of outputting a full HTML file, this outputs just the marked-up text.
 
 
 # Textplay -- A plain-text conversion tool for screenwriters
@@ -87,8 +87,8 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
-text = text.gsub(/^#+[ \t]+(.*)/,'<secret>\1</secret>')
-text = text.gsub(/^=[ \t]+(.*)/,'<secret>\1</secret>')
+text = text.gsub(/^#+[ \t]+(.*)/,'<note>\1</note>')
+text = text.gsub(/^=[ \t]+(.*)/,'<note>\1</note>')
 # these need not be completely removed simply because they do not span multiple lines
 
 # Textplay/Screenbundle comments

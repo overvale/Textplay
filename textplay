@@ -80,15 +80,16 @@
 
 # SETTINGS
 
-font = "courier"
+title = "A Screenplay"
+font = "Courier Prime"
 
-# font = "pitch"
-# A great drop-in replacement font for Courier is Pitch.
+# Courier Prime is a modern replacement for Courier.
+# More info here: http://quoteunquoteapps.com/courierprime/
+
+# Another great drop-in replacement font for Courier is Pitch.
 # More info on pitch can be found here: http://klim.co.nz/retail-fonts/pitch/
 # Your layout and page-count will be identical to using Courier
 # when using Pitch.
-
-title = "A Screenplay"
 
 # ------------------------------------------------------------------
 
@@ -118,10 +119,10 @@ optparse = OptionParser.new do|opts|
 	opts.banner = "
 Usage: textplay [options] [input-path] [output-path]
 
-- The first argument is always an input-path.
-- The second argument is always an output-path.
-- If there's no output-path textplay prints to `STDOUT` (PDF go to /temp).
-- If there's no input-path textplay reads from `STDIN`.
+• The first argument is always an input-path.
+• The second argument is always an output-path.
+• If there's no input-path textplay reads from STDIN.
+• If there's no output-path textplay prints to STDOUT, PDFs go to /temp.
 
 Options:
 "
@@ -421,8 +422,8 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
-text = text.gsub(/^#+[ \t]+(.*)/,'<secret>\1</secret>')
-text = text.gsub(/^=[ \t]+(.*)/,'<secret>\1</secret>')
+text = text.gsub(/^#+[ \t]+(.*)/,'<note>\1</note>')
+text = text.gsub(/^=[ \t]+(.*)/,'<note>\1</note>')
 # these need not be completely removed simply because they do not span multiple lines
 
 # Textplay/Screenbundle comments

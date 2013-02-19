@@ -17,7 +17,7 @@ prince-page-group: start;
 @page Screenplay {
 /* Page Numbers */
 @top-right-corner {
-font: 12pt "courier";
+font: 12pt "Courier Prime", Courier;
 content: counter(page)".";
 vertical-align: bottom;
 padding-bottom: 1em;
@@ -76,7 +76,7 @@ prince-bookmark-level: none;
 /* ---------- COMMON LAYOUT ---------- */
 
 body {
-font-family: "Courier";
+font-family: "Courier Prime", Courier;
 font-size: 12pt;
 line-height: 1;
 }
