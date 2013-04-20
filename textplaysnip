@@ -74,10 +74,17 @@ text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 # Caps lines => action - two spaces at end of line
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
-# Boneyard and notes
+# Boneyard
 text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
-# Perhaps secrets shouldn't be removed completely but programmatically it is too difficult to prevent further xml transformations within these blocks.
-text = text.gsub(/\[{2}([^\]\n]+?)\]{2}/,'<note>\1</note>')
+
+# Fountain [[notes]]
+text = text.gsub(/\[\[(.|\n)+\]\]/,'<secret />')
+
+# Boneyards and Notes are removed from the text because it is impossible
+# to prevent additional transformations inside them when newlines are present.
+# And since Fountain is an archival-format, there's no need to maintain notes
+# across conversions (FDX being an exception, but I'm not good enough of a
+# programmer to do that - see the Highland or Slugline apps if you need that).
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
