@@ -1,9 +1,9 @@
 Textplay
 ========
 
-Textplay is a simple ruby-script (one file, no dependancies) that converts screenplays written in Fountain formatted plain-text to a variety of useful formats: HTML, FDX (Final Draft), or PDF ([PrinceXML][prince] required).
+Textplay is a simple ruby-script (one file, no dependancies) that converts screenplays written in [Fountain][fountain] formatted plain-text to a variety of useful formats: HTML, FDX ([Final Draft][finaldraft]), or PDF ([PrinceXML][prince] required).
 
-Textplay has been rigorously tested against fountain documents, but it is not perfect, if you encounter a problem please let me know: [@olivertaylor][tw].
+Textplay has been rigorously tested against fountain documents, but it is not perfect, if you encounter a problem please let me know: [@olivertaylor][twitter].
 
 ## Command-line interface
 
@@ -13,10 +13,10 @@ Calling Textplay from the command-line is simple:
 
 `textplay [options] [input-path] [output-path]`
 
-- The first argument is always an input-path.
-- The second argument is always an output-path.
-- If there's no output-path textplay prints to `STDOUT` (PDF go to /temp).
-- If there's no input-path textplay reads from `STDIN`.
+* The first argument is always an input-path.
+* The second argument is always an output-path.
+* If there's no output-path textplay prints to `STDOUT` (PDFs go to `/tmp`).
+* If there's no input-path textplay reads from `STDIN`.
 
 Textplay has three options you can call in the command line. `--help`, `--fdx`, and `--pdf` (`-h`, `-f`, and `-p`respectively).
 
@@ -48,5 +48,7 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 * I'm not a good enough programmer.
 
 
-[tw]: http://twitter.com/olivertaylor
+[twitter]: http://twitter.com/olivertaylor
 [prince]: http://princexml.com
+[finaldraft]: http://finaldraft.com
+[fountain]: http://fountain.io
