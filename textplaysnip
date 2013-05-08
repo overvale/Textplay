@@ -66,12 +66,13 @@ text = ARGF.read
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
 text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
+text = text.gsub(/^[ \t]+$/, '')
 
 # -------- fountain escapes
-# Transitions enting in {to:} with a space after
+# force lines ending with {to: } to be action instead of transition
 text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 
-# Caps lines => action - two spaces at end of line
+# escape caps lines => action - when two spaces are at end of line
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
 # Boneyard
@@ -89,7 +90,6 @@ text = text.gsub(/\[\[(.|\n)+\]\]/,'<secret />')
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
 text = text.gsub(/^[\ \t]*\>[ \t]*(.*)$/,'<transition>\1</transition>')
-
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
@@ -157,7 +157,7 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|paren|
 
 # SEARCH THE DIALOGUE-BLOCK FOR DIALOG
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
-	talk.gsub(/^[ \t]*([^<\n]+)$/, '<talk>\1</talk>')
+	talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
 }
 
 
@@ -165,8 +165,8 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
 
 # FULLY-FORMED SLUGLINES
 text = text.gsub(/
-# Require leading empty line
-^[\ \t]* \n
+# Require leading empty line - or the beginning of file
+(?i:^\A | ^[\ \t]* \n)
 # Respect leading whitespace
 ^[\ \t]*
 # Standard prefixes, allowing for bold-italic
@@ -205,7 +205,7 @@ text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
 }
 
-# This cleans up dialogue blocks with line-breaks.
+# This cleans up line-breaks within dialogue blocks
 text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
 # ----- HTML -----------------------------------------------------

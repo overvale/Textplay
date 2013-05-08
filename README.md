@@ -39,9 +39,10 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 
 ### Q. What parts of the Fountain spec are not supported?
 
+* Title Pages.
 * Scene Numbers.
 * Dual Dialog blocks.
-* Title Pages.
+* Empty lines in dialogue-blocks.
 
 ### Q. Why not?
 

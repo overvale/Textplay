@@ -2,7 +2,6 @@
 
 # Textplay -- A plain-text conversion tool for screenwriters
 #
-# Version 0.5.1 - 2012-11-08
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
@@ -47,36 +46,6 @@
 # of this software, even if advised of the possibility of such damage.
 #
 # ---------------------------------------------------------------------
-
-# WHAT IS TEXTPLAY?
-
-# Textplay is a ruby script that converts Fountain (http://fountain.io)
-# formatted files to HTML, FDX, and (if you have Prince XML installed) PDF.
-
-# Q. How does Textplay interperate text differently from the Fountain spec?
-
-# 1. Textplay is smart about what consitutes a transition. Usually, there's
-#    no need to escape transitions, but you can. "CUT TO:", "FADE TO BLACK.",
-#    "FADE UP:", are all valid transitions.
-
-# 2. An action line that contains no lower-case letters is converted to a
-#    slugline. Thus there is no need to escape a line that just contains
-#    "BACK IN THE HOUSE", but you can.
-
-# 3. Lines that begin with "//" are interperated as notes. This was done to
-#    provide backward-compatibility with Textplay/Screenbundle documents.
-
-# Q. What parts of the Fountain spec are not supported?
-
-# 1. Scene Numbers.
-# 2. Dual Dialog blocks.
-# 3. Title Pages.
-# 4. Empty lines inside [[notes]].
-
-# Q. Why aren't they?
-# A. I'm not a good enough coder.
-
-# ------------------------------------------------------------------
 
 # SETTINGS
 
@@ -197,177 +166,209 @@ htmlStart = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
 <meta name=\"generator\" content=\"Textplay\">
 <style type=\"text/css\" media=\"all\">
 
-  /* ---------- PAGE STYLES ---------- */
+/* ---------- PAGE STYLES ---------- */
 
-  /* all page margins are maximums */
-  @page {
-  size: 8.5in 11in;
-  margin-top:1in;
-  margin-right:1in;
-  margin-bottom:.5in;
-  margin-left:1.5in;
-  }
-  /* This makes the page-counter start on the first page of the screenplay */
-  div#screenplay {
-  counter-reset: page 1;
-  page: Screenplay;
-  prince-page-group: start;
-  }
-  @page Screenplay {
-  /* Page Numbers */
-  @top-right-corner {
-  font: 12pt \"#{font}\", courier;
-  content: counter(page)\".\";
-  vertical-align: bottom;
-  padding-bottom: 1em;
-  }
-  /* Define Header */
-  @top-left {
-  content: \"\";
-  font: italic 10pt Georgia;
-  color: #888;
-  vertical-align: bottom;
-  padding-bottom: 1.3em;
-  }
-  /* Define Footer */
-  @bottom-left {
-  content: \"\";
-  font: italic 10pt Georgia;
-  color: #888;
-  vertical-align:top;
-  padding-top:0;
-  }
-  }
-  /* removes the header and page-numbers from the first page */
-  @page Screenplay:first {
-  @top-right-corner { content: normal; }
-  @top-left { content: normal; }
-  }
-  /* These control where page-breaks can and cannot happen */
-  p {
-  orphans: 2;
-  widows: 2;
-  }
-  dl {
-  page-break-inside:avoid;
-  }
-  dt, h2, h5 {
-  page-break-after: avoid;
-  }
-  dd.parenthetical {
-  orphans: 3;
-  widows: 3;
-  page-break-before: avoid;
-  page-break-after: avoid;
-  }
-  dd {
-  page-break-before:avoid;
-  }
-  div.page-break {
-  page-break-after:always;
-  }
+/* all page margins are maximums */
+@page {
+size: 8.5in 11in;
+margin-top:1in;
+margin-right:1in;
+margin-bottom:.5in;
+margin-left:1.5in;
+}
+/* This makes the page-counter start on the first page of the screenplay */
+div#screenplay {
+counter-reset: page 1;
+page: Screenplay;
+prince-page-group: start;
+}
+@page Screenplay {
+/* Page Numbers */
+@top-right-corner {
+font: 12pt \"#{font}\", courier;
+content: counter(page)\".\";
+vertical-align: bottom;
+padding-bottom: 1em;
+}
+/* Define Header */
+@top-left {
+content: \"\";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align: bottom;
+padding-bottom: 1.3em;
+}
+/* Define Footer */
+@bottom-left {
+content: \"\";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align:top;
+padding-top:0;
+}
+}
+/* removes the header and page-numbers from the first page */
+@page Screenplay:first {
+@top-right-corner { content: normal; }
+@top-left { content: normal; }
+}
+/* These control where page-breaks can and cannot happen */
+p {
+orphans: 2;
+widows: 2;
+}
+dl {
+page-break-inside:avoid;
+}
+dt, h2, h5 {
+page-break-after: avoid;
+}
+dd.parenthetical {
+orphans: 3;
+widows: 3;
+page-break-before: avoid;
+page-break-after: avoid;
+}
+dd {
+page-break-before:avoid;
+}
+div.page-break {
+page-break-after:always;
+}
 
-  /* by default Prince bookmarks all headings, no thanks */
-  h3, h4, h5, h6 {
-  prince-bookmark-level: none;
-  }
+/* by default Prince bookmarks all headings, no thanks */
+h3, h4, h5, h6 {
+prince-bookmark-level: none;
+}
 
-  /* ---------- COMMON LAYOUT ---------- */
+/* ---------- COMMON LAYOUT ---------- */
 
-  body {
-  font-family: \"#{font}\", courier;
-  font-size: 12pt;
-  line-height: 1;
-  }
-  #screenplay {
-  width: 6in;
-  margin:0 auto;
-  }
-  p.center {
-  text-align:center;
-  margin-left:0;
-  width:100%;
-  }
-  p {
-  margin-top:12pt;
-  margin-bottom:12pt;
-  margin-left:0;
-  width:auto;
-  white-space: pre-wrap;
-  }
-		
-  /*Character Names*/
-		
-  dt {
-  font-weight:normal;
-  margin-top:1em;
-  margin-left:2in;
-  width:4in;
-  }
-		
-  /*Parentheticals*/
-		
-  dd.parenthetical {
-  margin-left:1.6in;
-  text-indent:-.12in;
-  width: 2in;
-  }
-		
-  /*Dialogue*/
-		
-  dd {
-  margin:0;
-  margin-left: 1in;
-  width: 3.5in;
-  line-height: inherit;
-  }
-		
-  /* Sluglines and Transitions */
-		
-  h1,h2,h3,h4,h5,h6 {
-  font-weight: normal;
-  font-size: 12pt;
-  margin-top: 1em;
-  margin-bottom: 1em;
-  text-transform:uppercase;
-  }
-		
-  /* Full Sluglines */
-		
-  h2 {
-  width: inherit;
-  margin-top: 12pt;
-  margin-bottom: 12pt;
-  margin-left: 0;
-  text-decoration:none;
-  font-weight: bold;
-  }
-		
-  /* Right Transitions */
-		
-  h3 {
-  margin-left: 4in;
-  width: 2in;
-  }
-		
-  /* Left Transitions */
-		
-  h4 {
+body {
+font-family: \"Courier Prime\", courier;
+font-size: 12pt;
+line-height: 1;
+}
+#screenplay {
+width: 6in;
+margin:0 auto;
+background:#eee;
+}
+p.center {
+text-align:center;
+margin-left:0;
+width:100%;
+}
+p {
+margin-top:12pt;
+margin-bottom:12pt;
+margin-left:0;
+width:auto;
+white-space: pre-wrap;
+}
 
-  }
-		
-  /* Goldman Sluglines */
-		
-  h5 {
-  font-weight: bold;
-  }
-		
-  span.underline {
-  text-decoration:underline;
-  }
-  .comment {
-  display:none
-  }
+/*Character Names*/
+
+dt {
+font-weight:normal;
+margin-top:1em;
+margin-left:2in;
+width:4in;
+}
+
+/*Parentheticals*/
+
+dd.parenthetical {
+margin-left:1.6in;
+text-indent:-.12in;
+width: 2in;
+}
+
+/*Dialogue*/
+
+dd {
+margin:0;
+margin-left: 1in;
+width: 3.5in;
+line-height: inherit;
+white-space: pre-wrap;
+}
+
+/* Dual-Dialogue-blocks */
+
+dl {clear:both;}
+
+dl.dual {
+width:2.9in;
+clear:none;
+}
+
+dl.dual dt, dl.dual dd { margin-left:0; width:100%;}
+
+dl.dual.first {
+float:left;
+margin-top:-12pt;
+}
+
+dl.dual.second {
+margin-right:0;
+margin-left:auto;
+}
+
+dl.dual dt {
+text-align:center;
+}
+
+dl.dual dd.parenthetical {
+width:2.1in;
+margin-left:.32in;
+}
+
+/* Sluglines and Transitions */
+
+h1,h2,h3,h4,h5,h6 {
+font-weight: normal;
+font-size: 12pt;
+margin-top: 1em;
+margin-bottom: 1em;
+text-transform:uppercase;
+}
+
+/* Full Sluglines */
+
+h2 {
+width: inherit;
+margin-top: 12pt;
+margin-bottom: 12pt;
+margin-left: 0;
+text-decoration:none;
+font-weight: bold;
+}
+
+/* Right Transitions */
+
+h3 {
+margin-left: 4in;
+width: 2in;
+}
+
+/* Left Transitions */
+
+h4 {
+
+}
+
+/* Goldman Sluglines */
+
+h5 {
+font-weight: bold;
+}
+
+span.underline {
+text-decoration:underline;
+}
+.comment {
+display:none
+}
 </style>
 </head>
 <body>
@@ -400,6 +401,7 @@ fdxEnd = '</Content>
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
 text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
+text = text.gsub(/^[ \t]+$/, '')
 
 # -------- fountain escapes
 # force lines ending with {to: } to be action instead of transition
@@ -490,8 +492,19 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|paren|
 
 # SEARCH THE DIALOGUE-BLOCK FOR DIALOG
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
-	talk.gsub(/^[ \t]*([^<\n]+)$/, '<talk>\1</talk>')
+	talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
 }
+
+
+# Dual Dialogue Blocks
+# --------------------
+
+# mark dual-dialogue blocks with a <join-marker>
+text = text.gsub(/^\n(<dialogue>\n<character>.+?)( +\^)(<\/character>)/, '<join-marker>' + "\n" + '\1\3')
+
+# remove the <join-marker> and add "class" to <dialogue> tag
+text = text.gsub(/\n\n<dialogue>\n((?:.+\n)+)<join-marker>\n<dialogue>/, "\n\n" + '<dialogue class="dual first">' + "\n" + '\1' + "\n" + '<dialogue class="dual second">')
+
 
 
 # ------- Scene Headings
@@ -533,7 +546,7 @@ text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, 
 # This cleans up action paragraphs with line-breaks.
 text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
 
-# Convert tabs to 4 spaces
+# Convert tabs to spaces within action
 text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
 }
@@ -591,7 +604,7 @@ else
   text = text.gsub(/<\/slug>/, '</h5>')
   text = text.gsub(/<center>/, '<p class="center">')
   text = text.gsub(/<\/center>/, '</p>')
-  text = text.gsub(/<dialogue>/,'<dl>')
+  text = text.gsub(/<dialogue( class="dual (first|second)")?>/,'<dl\1>')
   text = text.gsub(/<\/dialogue>/,'</dl>')
   text = text.gsub(/<character>/, '<dt class="character">')
   text = text.gsub(/<\/character>/, '</dt>')

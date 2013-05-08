@@ -76,13 +76,14 @@ prince-bookmark-level: none;
 /* ---------- COMMON LAYOUT ---------- */
 
 body {
-font-family: "Courier Prime", Courier;
+font-family: "Courier Prime", courier;
 font-size: 12pt;
 line-height: 1;
 }
 #screenplay {
 width: 6in;
 margin:0 auto;
+background:#eee;
 }
 p.center {
 text-align:center;
@@ -96,35 +97,66 @@ margin-left:0;
 width:auto;
 white-space: pre-wrap;
 }
-	 
+
 /*Character Names*/
-	 
+
 dt {
 font-weight:normal;
 margin-top:1em;
 margin-left:2in;
 width:4in;
 }
-	 
+
 /*Parentheticals*/
-	 
+
 dd.parenthetical {
 margin-left:1.6in;
 text-indent:-.12in;
 width: 2in;
 }
-	 
+
 /*Dialogue*/
-	 
+
 dd {
 margin:0;
 margin-left: 1in;
 width: 3.5in;
 line-height: inherit;
+white-space: pre-wrap;
 }
-	 
+
+/* Dual-Dialogue-blocks */
+
+dl {clear:both;}
+
+dl.dual {
+width:2.9in;
+clear:none;
+}
+
+dl.dual dt, dl.dual dd { margin-left:0; width:100%;}
+
+dl.dual.first {
+float:left;
+margin-top:-12pt;
+}
+
+dl.dual.second {
+margin-right:0;
+margin-left:auto;
+}
+
+dl.dual dt {
+text-align:center;
+}
+
+dl.dual dd.parenthetical {
+width:2.1in;
+margin-left:.32in;
+}
+
 /* Sluglines and Transitions */
-	 
+
 h1,h2,h3,h4,h5,h6 {
 font-weight: normal;
 font-size: 12pt;
@@ -132,9 +164,9 @@ margin-top: 1em;
 margin-bottom: 1em;
 text-transform:uppercase;
 }
-	 
+
 /* Full Sluglines */
-	 
+
 h2 {
 width: inherit;
 margin-top: 12pt;
@@ -143,26 +175,26 @@ margin-left: 0;
 text-decoration:none;
 font-weight: bold;
 }
-	 
+
 /* Right Transitions */
-	 
+
 h3 {
 margin-left: 4in;
 width: 2in;
 }
-	 
+
 /* Left Transitions */
-	 
+
 h4 {
 
 }
-	 
+
 /* Goldman Sluglines */
-	 
+
 h5 {
 font-weight: bold;
 }
-	 
+
 span.underline {
 text-decoration:underline;
 }
