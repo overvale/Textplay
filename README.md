@@ -41,7 +41,6 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 
 * Title Pages.
 * Scene Numbers.
-* Dual Dialog blocks.
 * Empty lines in dialogue-blocks.
 
 ### Q. Why not?

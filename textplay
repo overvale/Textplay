@@ -251,7 +251,6 @@ line-height: 1;
 #screenplay {
 width: 6in;
 margin:0 auto;
-background:#eee;
 }
 p.center {
 text-align:center;
