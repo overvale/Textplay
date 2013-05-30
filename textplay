@@ -524,8 +524,8 @@ text = text.gsub(/
 
 # GOLDMAN SLUGLINES
 text = text.gsub(/
-# Require leading empty line
-^[\ \t]* \n
+# Require leading empty line - or the beginning of file
+(?i:^\A | ^[\ \t]* \n)
 # Any line with all-uppercase
 ^[ \t]*(?=\S)([^a-z\<\>\n]+)$
 /x, "\n"+'<slug>\1</slug>')
