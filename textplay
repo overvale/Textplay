@@ -428,7 +428,7 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
-text = text.gsub(/^[ \t]#+[ \t]+(.*)/,'<note>\1</note>')
+text = text.gsub(/^[ \t]*#+[ \t]+(.*)/,'<note>\1</note>')
 text = text.gsub(/^[ \t]*=[ \t]+(.*)/,'<note>\1</note>')
 # these need not be completely removed simply because they do not span multiple lines
 
