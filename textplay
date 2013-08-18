@@ -410,10 +410,10 @@ text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
 # Boneyard
-text = text.gsub(/\/\*(.)+?\*\//, '<secret />')
+text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
 
 # Fountain [[notes]]
-text = text.gsub(/\[\[(.)+\]\]/,'<secret />')
+text = text.gsub(/\[{2}[^\]]+\]{2}/,'<secret />')
 
 # Boneyards and Notes are removed from the text because it is impossible
 # to prevent additional transformations inside them when newlines are present.
