@@ -392,6 +392,12 @@ fdxEnd = '</Content>
 </FinalDraft>
 '
 
+# XML Header
+xmlStart = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>'
+
+# XML Footer
+xmlEnd = '</root>'
 
 
 # ----- PHASE 3 -----------------------------------------------------
@@ -418,8 +424,7 @@ text = text.gsub(/\[{2}[^\]]+\]{2}/,'<secret />')
 # Boneyards and Notes are removed from the text because it is impossible
 # to prevent additional transformations inside them when newlines are present.
 # And since Fountain is an archival-format, there's no need to maintain notes
-# across conversions (FDX being an exception, but I'm not good enough of a
-# programmer to do that - see the Highland or Slugline apps if you need that).
+# across conversions (retaining notes in FDX being an exception).
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
@@ -643,7 +648,9 @@ if ARGV[1]
 		system "prince /tmp/textplay.html #{ARGV[1]}"
 	elsif options[:xml] == true
     # output xml if requested
+		newFile.puts xmlStart
 		newFile.puts text
+		newFile.puts xmlEnd
 	else
     # otherwise fallback to HTML
 		newFile.puts htmlStart
@@ -669,7 +676,9 @@ else
 		system "prince /tmp/textplay.html; open /tmp/textplay.pdf"
 	elsif options[:xml] == true
     # output xml if requested
-		puts text
+		puts xmlStart
+        puts text
+        puts xmlEnd
 	else
     # otherwise fallback to HTML
 		puts htmlStart
