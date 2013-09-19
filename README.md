@@ -3,7 +3,7 @@ Textplay
 
 Textplay is a simple ruby-script (one file, no dependancies) that converts screenplays written in [Fountain][fountain] formatted plain-text to a variety of useful formats: HTML, FDX ([Final Draft][finaldraft]), or PDF ([PrinceXML][prince] required).
 
-Textplay has been rigorously tested against fountain documents, but it is not perfect, if you encounter a problem please let me know: [@olivertaylor][twitter].
+Textplay has been rigorously tested against fountain documents, but it is not perfect, if you encounter a problem please [open a github issue][ghiss].
 
 ## Command-line interface
 
@@ -42,14 +42,14 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 * Title Pages.
 * Scene Numbers.
 * Empty lines in dialogue-blocks.
-* Multi-line notes and "boneyards".
 
 ### Q. Why not?
 
-* I'm not a good enough programmer.
+* I'm not a good enough programmer - and/or disagree with the Fountain spec.
 
 
 [twitter]: http://twitter.com/olivertaylor
 [prince]: http://princexml.com
 [finaldraft]: http://finaldraft.com
 [fountain]: http://fountain.io
+[ghiss]: https://github.com/olivertaylor/Textplay/issues?state=open
