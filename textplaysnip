@@ -6,7 +6,6 @@
 
 # Textplay -- A plain-text conversion tool for screenwriters
 #
-# Version 0.5
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
@@ -76,16 +75,15 @@ text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
 
 # Boneyard
-text = text.gsub(/\/\*(.)+?\*\//, '<secret />')
+text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
 
 # Fountain [[notes]]
-text = text.gsub(/\[\[(.)+\]\]/,'<secret />')
+text = text.gsub(/\[{2}[^\]]+\]{2}/,'<secret />')
 
 # Boneyards and Notes are removed from the text because it is impossible
 # to prevent additional transformations inside them when newlines are present.
 # And since Fountain is an archival-format, there's no need to maintain notes
-# across conversions (FDX being an exception, but I'm not good enough of a
-# programmer to do that - see the Highland or Slugline apps if you need that).
+# across conversions (retaining notes in FDX being an exception).
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
@@ -94,8 +92,8 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
-text = text.gsub(/^#+[ \t]+(.*)/,'<note>\1</note>')
-text = text.gsub(/^=[ \t]+(.*)/,'<note>\1</note>')
+text = text.gsub(/^[ \t]*#+[ \t]*(.*)/,'<note>\1</note>')
+text = text.gsub(/^[ \t]*=[ \t]*(.*)/,'<note>\1</note>')
 # these need not be completely removed simply because they do not span multiple lines
 
 # Textplay/Screenbundle comments
@@ -161,6 +159,17 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
 }
 
 
+# Dual Dialogue Blocks
+# --------------------
+
+# mark dual-dialogue blocks with a <join-marker>
+text = text.gsub(/^\n(<dialogue>\n<character>.+?)( +\^)(<\/character>)/, '<join-marker>' + "\n" + '\1\3')
+
+# remove the <join-marker> and add "class" to <dialogue> tag
+text = text.gsub(/\n\n<dialogue>\n((?:.+\n)+)<join-marker>\n<dialogue>/, "\n\n" + '<dialogue class="dual first">' + "\n" + '\1' + "\n" + '<dialogue class="dual second">')
+
+
+
 # ------- Scene Headings
 
 # FULLY-FORMED SLUGLINES
@@ -179,8 +188,8 @@ text = text.gsub(/
 
 # GOLDMAN SLUGLINES
 text = text.gsub(/
-# Require leading empty line
-^[\ \t]* \n
+# Require leading empty line - or the beginning of file
+(?i:^\A | ^[\ \t]* \n)
 # Any line with all-uppercase
 ^[ \t]*(?=\S)([^a-z\<\>\n]+)$
 /x, "\n"+'<slug>\1</slug>')
@@ -223,7 +232,7 @@ text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
   text = text.gsub(/<\/slug>/, '</h5>')
   text = text.gsub(/<center>/, '<p class="center">')
   text = text.gsub(/<\/center>/, '</p>')
-  text = text.gsub(/<dialogue>/,'<dl>')
+  text = text.gsub(/<dialogue( class="dual (first|second)")?>/,'<dl\1>')
   text = text.gsub(/<\/dialogue>/,'</dl>')
   text = text.gsub(/<character>/, '<dt class="character">')
   text = text.gsub(/<\/character>/, '</dt>')
