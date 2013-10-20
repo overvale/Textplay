@@ -20,14 +20,16 @@ Contact:
     1588 Mission Dr.
     Solvang, CA 93463
 
+
+
 Last line - not tag
 '
 
 # -------------------------
 
 # define regex for key-value pairs, multi-line and single-line
-multi_key = /^(?! )[\S ]+: *\n(( {3,}|\t).+\n?)+/
-single_key = /^(?! )([\S ]+): ([^\n]+)\n/
+multi_key = /^(?! )[\S ]+: *\n(( {3,}|\t).+\n?)+(^ *\n){0,1}/
+single_key = /^(?! )([\S ]+): ([^\n]+)\n(^ *\n){0,1}/
 
 # -------------------------
 
