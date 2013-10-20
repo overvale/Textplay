@@ -81,21 +81,8 @@
 
 # define test text
 text = '
-# First line - not tag
-
-Title:
-    _**BRICK & STEEL**_
-    _**FULL RETIRED**_
-Credit: Written by
-Author: Stu Maschwitz
-Source: Story by KTM
-Draft date: 1/20/2012
-Contact:
-    Next Level Productions
-    1588 Mission Dr.
-    Solvang, CA 93463
-
-Last line - not tag
+title: Erased
+slugline_spacing: 2
 '
 
 # -------------------------
@@ -146,7 +133,7 @@ end
 
 # debugging switches
 
-debug = false
+debug = true
 
 # -------------------------
 
@@ -237,15 +224,55 @@ if meta == true
   # footer
   footer = text.scan(/<key>footer<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
 
-  p title
-  p goldman_sluglines
-  p screenbundle_comments
-  p font
-  p slugline_spacing
-  p bold_sluglines
-  p underlined_sluglines
-  p header
-  p footer
-
 end
 
+
+# -------------------------
+
+# Set defaults for any undefined value
+
+if title == ""
+  title = "A Screenplay"
+end
+
+if goldman_sluglines == ""
+  goldman_sluglines = "on"
+end
+
+if screenbundle_comments == ""
+  screenbundle_comments = "on"
+end
+
+if font == ""
+  font = "Courier Prime"
+end
+
+if slugline_spacing == ""
+  slugline_spacing = 12
+else
+  slugline_spacing = slugline_spacing.to_i * 12
+end
+
+if bold_sluglines == ""
+  bold_sluglines = "on"
+end
+
+if underlined_sluglines == ""
+  underlined_sluglines = "off"
+end
+
+# No need to set head and footer defaults as they should be empty by default
+
+
+
+if debug == true
+p "title: " + title
+p "goldman_sluglines: " + goldman_sluglines
+p "screenbundle_comments: " + screenbundle_comments
+p "font: " + font
+p "slugline_spacing: " + slugline_spacing.to_s
+p "bold_sluglines: " + bold_sluglines
+p "underlined_sluglines: " + underlined_sluglines
+p "header: " + header
+p "footer: " + footer
+end
