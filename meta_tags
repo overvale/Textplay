@@ -130,7 +130,7 @@ single_key = /
 # key-value pair, then enable tagging of the meta block
 
 # returns the fist non-comment line
-l1_test = /^(?! *[#=\[]).+/.match(text)
+l1_test = /^(?! *(#|=|\|\[\[|\/\*)).+/.match(text)
 # convert match to string
 l1_test = l1_test[0]
 
@@ -141,6 +141,12 @@ if l1_test =~ /: */
 else
   meta = false
 end
+
+# -------------------------
+
+# debugging switches
+
+debug = false
 
 # -------------------------
 
@@ -173,9 +179,9 @@ if meta == true
     }
 
     # clean-up multi-line values
-#     text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
-#       tags.gsub(/<\/value>\n<value>/, "\n")
-#     }
+    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+      tags.gsub(/<\/value>\n<value>/, "\n")
+    }
 
     # remove empty lines
     text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
@@ -188,10 +194,58 @@ if meta == true
       tags.gsub(/#{single_key}/, '<meta-single><key>\1</key><value>\2</value></meta-single>'+"\n")
     }
 
+  if debug == true
+    print text
+  end
+
+else
+  # if there's no meta info, just print the text
+  print text
 end
+
 
 # -------------------------
 
-# Print the result
+if meta == true
 
-print text
+  # This sets the value of variables based on the meta tags
+
+  # title
+  title = text.scan(/<key>title<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # goldman_sluglines
+  goldman_sluglines = text.scan(/<key>goldman_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # screenbundle_comments
+  screenbundle_comments = text.scan(/<key>screenbundle_comments<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # font
+  font = text.scan(/<key>font<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # slugline_spacing
+  slugline_spacing = text.scan(/<key>slugline_spacing<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # bold_sluglines
+  bold_sluglines = text.scan(/<key>bold_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # underlined_sluglines
+  underlined_sluglines = text.scan(/<key>underlined_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # header
+  header = text.scan(/<key>header<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # footer
+  footer = text.scan(/<key>footer<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  p title
+  p goldman_sluglines
+  p screenbundle_comments
+  p font
+  p slugline_spacing
+  p bold_sluglines
+  p underlined_sluglines
+  p header
+  p footer
+
+end
+
