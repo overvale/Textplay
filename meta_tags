@@ -1,0 +1,138 @@
+#!/usr/bin/ruby
+
+# read the input
+# text = ARGF.read
+
+# define test text
+text = '
+[[First line - not tag]]
+
+Title:
+    _**BRICK & STEEL**_
+    _**FULL RETIRED**_
+Credit: Written by
+Author: Stu Maschwitz
+
+Source: Story by KTM
+Draft date: 1/20/2012
+Contact:
+    Next Level Productions
+    1588 Mission Dr.
+    Solvang, CA 93463
+
+Last line - not tag
+'
+
+# -------------------------
+
+# define regex for key-value pairs, multi-line and single-line
+multi_key = /^(?! )[\S ]+: *\n(( {3,}|\t).+\n?)+/
+single_key = /^(?! )([\S ]+): ([^\n]+)\n/
+
+# -------------------------
+
+# If the first thing in the document (aside form comments) is a
+# key-value pair, then enable tagging of the meta block
+
+# returns the fist non-comment line
+l1_test = /^(?! *[#=\[]).+/.match(text)
+# convert match to string
+l1_test = l1_test[0]
+
+# print the result (for debugging)
+# print "first-line: " + l1_test + "\n"
+
+# if the first line contains a colon and a space, set the "meta" variable
+if l1_test =~ /: */
+  meta = true
+else
+  meta = false
+end
+
+# -------------------------
+
+# If the first (non-comment) line looks like a meta tag (meta == true)...
+# then assume everything that follows is a block of meta tags
+
+if meta == true
+
+  # Find the FIRST occurance of what looks like a meta_info_block and tag it.
+  # Very important that this is "sub" and not "gsub"
+  text = text.sub(/(#{multi_key}|#{single_key})+/,'<meta_block>'+"\n"+'\0'+'</meta_block>'+"\n")
+
+  # Identify multi-line key-value pairs...
+
+    # search for multi-line key-value pairs - and tag with markup
+    text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/){|tags|
+      tags.gsub(/#{multi_key}/, '<meta_multi>'+"\n"+'\0'+"\n"+'</meta_multi>'+"\n")
+    }
+
+    # search inside meta for keys
+    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+      tags.gsub(/(.+): */, '<key>\1</key>')
+    }
+
+    # search inside meta-tags for values
+    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+      tags.gsub(/( {3,}|\t)(.+)/, '<value>\2</value>')
+    }
+
+    # clean-up multi-line values
+    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+      tags.gsub(/<\/value>\n<value>/, "\n")
+    }
+
+    # remove empty lines
+    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+      tags.gsub(/^\n/, "")
+    }
+
+  # Identify single-line key-value pairs
+
+  text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/){|tags|
+      tags.gsub(/#{single_key}/, '<meta-single><key>\1</key><value>\2</value></meta-single>'+"\n")
+    }
+
+end
+
+# -------------------------
+
+# Print the result
+
+print text
+
+
+
+
+
+
+
+# Textplay Configuration Files
+# ============================
+# 
+# 2013-10-18
+# 
+# define preferences
+# layout values (bold sluglines, etc)
+# title-page info
+# 
+# Should be in-document for portability
+# But could also be per-project
+# wouldn't want the same config block in every single doc
+# in-document would always override project settings
+# 
+# Fountain ignores unsupported key/value pairs for title pages.
+# I could use this same format.
+# 
+# project config files, like git
+# 
+# 2013-10-19
+# 
+# I still don't know how I'd limit the searching and replacing to
+# being the "first thing in the document" per the specs.
+# 
+# I'd have to assume all the meta info would be grouped together
+# (with optional empty lines), and that it's the first thing in the
+# document. If I can do that it should be pretty simple to tag the
+# entire block, then act on the insides.
+# 
