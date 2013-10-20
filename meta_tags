@@ -8,7 +8,11 @@
 # Using Fountain's `key:value` title-page syntax, you can control how
 # textplay interperets your screenplay. The following values can
 # be customized:
+#
+#     * title (for metadata only) -- default: "A Screenplay"
 # 
+#       You can define what name textplay uses when generating files.
+#  
 #     * goldman_sluglines -- default: ON
 # 
 #       By defualt textplay interprets any line that's all-caps as a
@@ -27,10 +31,6 @@
 #   
 #       If you'd like to specify your own font, Courier Prime and Courier
 #       will be used as backup fonts.
-# 
-#     * title (for metadata only) -- default: "A Screenplay"
-# 
-#       You can define what name textplay uses when generating files.
 # 
 #     * slugline_spacing -- default: 1
 # 
@@ -63,16 +63,16 @@
 # goldman_sluglines: off
 # bold_sluglines: on
 # 
+# The block of key/value pairs:
+#    a. Must be the first non-comment thing in the document.
+#    b. Options CAN be wrapped in boneyard comments or notes
+#    c. Options must NOT be indented
+#    d. The block of option key/value pairs cannot contain more than
+#       1 empty line. 2 empty lines will cause textplay to stop parsing
+#       for options.
+#
 # For more details see the Fountain documentation 
 # <http://fountain.io/syntax#section-titlepage>.
-# 
-# It's worth noting a few things:
-# 
-# 1. These key:value pairs must be the first (non-comment) thing in
-#    the document.
-# 2. Only one blank line is allowed between key:value pairs, two empty
-#    lines will stop textplay from continuing to parse the document for
-#    options.
 #
 # ======================================================================
 
