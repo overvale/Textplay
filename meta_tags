@@ -1,18 +1,93 @@
 #!/usr/bin/ruby
 
+# ======================================================================
+# 
+# Configuring Textplay
+# ====================
+# 
+# Using Fountain's `key:value` title-page syntax, you can control how
+# textplay interperets your screenplay. The following values can
+# be customized:
+# 
+#     * goldman_sluglines -- default: ON
+# 
+#       By defualt textplay interprets any line that's all-caps as a
+#       slugline.
+# 
+#     * screenbundle_comments -- default: ON
+# 
+#       To provide backwards-compatibility with screenbundle documents,
+#       textplay interprets any line starting with 2 slahes `//` as comments.
+# 
+#     * font -- default: "Courier Prime"
+# 
+#       By default textplay uses "Courier Prime" <http://quoteunquoteapps.com/courierprime/>
+#       a great alternative font for screenwriters. If you don't have that
+#       installed plain Courier will be used.
+#   
+#       If you'd like to specify your own font, Courier Prime and Courier
+#       will be used as backup fonts.
+# 
+#     * title (for metadata only) -- default: "A Screenplay"
+# 
+#       You can define what name textplay uses when generating files.
+# 
+#     * slugline_spacing -- default: 1
+# 
+#       By default textplay puts a single empty line above sluglines, you
+#       can change this to any number you want.
+# 
+#     * bold_sluglines -- default: ON
+#     * underlined_sluglines -- default: OFF
+# 
+#     * header -- empty by default
+# 
+#       Header information is displayed on every page, use this for
+#       revision numbers, dates, etc.
+# 
+#     * footer -- empty by default
+# 
+#       Any information you'd like in the footer of every page can go here.
+# 
+# 
+# For the time being, all other key/values are preserved as meta-data in
+# the document, but otherwise ignored.
+# 
+# 
+# 
+# To set these values just define the key/values at the beginning of the
+# document like this:
+# 
+# title: Ron's Woodland Adventure
+# font: Courier New
+# goldman_sluglines: off
+# bold_sluglines: on
+# 
+# For more details see the Fountain documentation 
+# <http://fountain.io/syntax#section-titlepage>.
+# 
+# It's worth noting a few things:
+# 
+# 1. These key:value pairs must be the first (non-comment) thing in
+#    the document.
+# 2. Only one blank line is allowed between key:value pairs, two empty
+#    lines will stop textplay from continuing to parse the document for
+#    options.
+#
+# ======================================================================
+
 # read the input
 # text = ARGF.read
 
 # define test text
 text = '
-[[First line - not tag]]
+# First line - not tag
 
 Title:
     _**BRICK & STEEL**_
     _**FULL RETIRED**_
 Credit: Written by
 Author: Stu Maschwitz
-
 Source: Story by KTM
 Draft date: 1/20/2012
 Contact:
@@ -20,20 +95,38 @@ Contact:
     1588 Mission Dr.
     Solvang, CA 93463
 
-
-
 Last line - not tag
 '
 
 # -------------------------
 
-# define regex for key-value pairs, multi-line and single-line
-multi_key = /^(?! )[\S ]+: *\n(( {3,}|\t).+\n?)+(^ *\n){0,1}/
-single_key = /^(?! )([\S ]+): ([^\n]+)\n(^ *\n){0,1}/
+# define regex for key-value pairs
+
+multi_key = /
+  # Cannot begin with spaces (that's a value)
+  ^(?!\ )
+  # the key itself
+  [\S\ ]+:\ *\n
+  # the indented value - multiple lines allowed
+  ((\ {3,}|\t).+\n?)+
+  # a single empty line is allowed - 2 empty lines ends the meta_block
+  (^\ *\n){0,1}
+/x
+
+single_key = /
+  # Cannot begin with spaces (that's a value)
+  ^(?!\ )
+  # the key
+  ([\S\ ]+):\ 
+  # the value
+  ([^\n]+)\n
+  # a single empty line is allowed - 2 empty lines ends the meta_block
+  (^\ *\n){0,1}
+/x
 
 # -------------------------
 
-# If the first thing in the document (aside form comments) is a
+# If the first thing in the document (aside from comments) is a
 # key-value pair, then enable tagging of the meta block
 
 # returns the fist non-comment line
@@ -41,10 +134,8 @@ l1_test = /^(?! *[#=\[]).+/.match(text)
 # convert match to string
 l1_test = l1_test[0]
 
-# print the result (for debugging)
-# print "first-line: " + l1_test + "\n"
-
-# if the first line contains a colon and a space, set the "meta" variable
+# if the first line contains a colon and an optional space, set the
+# "meta" variable
 if l1_test =~ /: */
   meta = true
 else
@@ -53,14 +144,16 @@ end
 
 # -------------------------
 
-# If the first (non-comment) line looks like a meta tag (meta == true)...
+# If the first (non-comment) line looks like a meta tag...
 # then assume everything that follows is a block of meta tags
 
 if meta == true
 
-  # Find the FIRST occurance of what looks like a meta_info_block and tag it.
-  # Very important that this is "sub" and not "gsub"
-  text = text.sub(/(#{multi_key}|#{single_key})+/,'<meta_block>'+"\n"+'\0'+'</meta_block>'+"\n")
+  # Find the FIRST occurance of what looks like a meta_block and tag it.
+  # Very important that this is "sub" and not "gsub" - gsub will match
+  # everything in the document that looks like meta tags - not a
+  # great idea.
+  text = text.sub(/(#{multi_key}|#{single_key})+/,'<meta_block>'+"\n"+'\0'+'</meta_block>'+"\n\n")
 
   # Identify multi-line key-value pairs...
 
@@ -80,9 +173,9 @@ if meta == true
     }
 
     # clean-up multi-line values
-    text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
-      tags.gsub(/<\/value>\n<value>/, "\n")
-    }
+#     text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+#       tags.gsub(/<\/value>\n<value>/, "\n")
+#     }
 
     # remove empty lines
     text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
@@ -102,39 +195,3 @@ end
 # Print the result
 
 print text
-
-
-
-
-
-
-
-# Textplay Configuration Files
-# ============================
-# 
-# 2013-10-18
-# 
-# define preferences
-# layout values (bold sluglines, etc)
-# title-page info
-# 
-# Should be in-document for portability
-# But could also be per-project
-# wouldn't want the same config block in every single doc
-# in-document would always override project settings
-# 
-# Fountain ignores unsupported key/value pairs for title pages.
-# I could use this same format.
-# 
-# project config files, like git
-# 
-# 2013-10-19
-# 
-# I still don't know how I'd limit the searching and replacing to
-# being the "first thing in the document" per the specs.
-# 
-# I'd have to assume all the meta info would be grouped together
-# (with optional empty lines), and that it's the first thing in the
-# document. If I can do that it should be pretty simple to tag the
-# entire block, then act on the insides.
-# 
