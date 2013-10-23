@@ -1,0 +1,75 @@
+# ======================================================================
+# 
+# Configuring Textplay
+# ====================
+# 
+# Using Fountain's `key:value` title-page syntax, you can control how
+# textplay interperets your screenplay. The following values can
+# be customized:
+#
+#     * title (for metadata only) -- default: "A Screenplay"
+# 
+#       You can define what name textplay uses when generating files.
+#  
+#     * goldman_sluglines -- default: ON
+# 
+#       By defualt textplay interprets any line that's all-caps as a
+#       slugline.
+# 
+#     * screenbundle_comments -- default: ON
+# 
+#       To provide backwards-compatibility with screenbundle documents,
+#       textplay interprets any line starting with 2 slahes `//` as comments.
+# 
+#     * font -- default: "Courier Prime"
+# 
+#       By default textplay uses "Courier Prime" <http://quoteunquoteapps.com/courierprime/>
+#       a great alternative font for screenwriters. If you don't have that
+#       installed plain Courier will be used.
+#   
+#       If you'd like to specify your own font, Courier Prime and Courier
+#       will be used as backup fonts.
+# 
+#     * slugline_spacing -- default: 1
+# 
+#       By default textplay puts a single empty line above sluglines, you
+#       can change this to any number you want.
+# 
+#     * bold_sluglines -- default: ON
+#     * underlined_sluglines -- default: OFF
+# 
+#     * header -- empty by default
+# 
+#       Header information is displayed on every page, use this for
+#       revision numbers, dates, etc.
+# 
+#     * footer -- empty by default
+# 
+#       Any information you'd like in the footer of every page can go here.
+# 
+# 
+# For the time being, all other key/values are preserved as meta-data in
+# the document, but otherwise ignored.
+# 
+# 
+# 
+# To set these values just define the key/values at the beginning of the
+# document like this:
+# 
+# title: Ron's Woodland Adventure
+# font: Courier New
+# goldman_sluglines: off
+# bold_sluglines: on
+# 
+# The block of key/value pairs:
+#    a. Must be the first non-comment thing in the document.
+#    b. Options CAN be wrapped in boneyard comments or notes
+#    c. Options must NOT be indented
+#    d. The block of option key/value pairs cannot contain more than
+#       1 empty line. 2 empty lines will cause textplay to stop parsing
+#       for options.
+#
+# For more details see the Fountain documentation 
+# <http://fountain.io/syntax#section-titlepage>.
+#
+# ======================================================================
