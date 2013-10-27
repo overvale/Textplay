@@ -386,38 +386,37 @@ if meta == true
 
 end
 
-
 # -------------------------
 
 # Set defaults for any undefined value
 
-if title == ""
+if title == nil
   title = "A Screenplay"
 end
 
-if goldman_sluglines == ""
+if goldman_sluglines == nil
   goldman_sluglines = "on"
 end
 
-if screenbundle_comments == ""
+if screenbundle_comments == nil
   screenbundle_comments = "on"
 end
 
-if font == ""
+if font == nil
   font = "Courier Prime"
 end
 
-if slugline_spacing == ""
-  slugline_spacing = 12
+if slugline_spacing == nil
+  slugline_spacing = "1"
 else
-  slugline_spacing = slugline_spacing.to_i * 12
+  slugline_spacing = slugline_spacing.to_i
 end
 
-if bold_sluglines == ""
+if bold_sluglines == nil
   bold_sluglines = "on"
 end
 
-if underlined_sluglines == ""
+if underlined_sluglines == nil
   underlined_sluglines = "off"
 end
 
@@ -430,7 +429,7 @@ end
 if bold_sluglines == "on"
   bold_sluglines = "bold"
 else
-  bold_sluglines = ""
+  bold_sluglines = "normal"
 end
 
 if underlined_sluglines == "on"
@@ -532,7 +531,7 @@ prince-bookmark-level: none;
 /* ---------- COMMON LAYOUT ---------- */
 
 body {
-font-family: \"Courier Prime\", courier;
+font-family: \"#{font}\", courier;
 font-size: 12pt;
 line-height: 1;
 }
@@ -624,7 +623,7 @@ text-transform:uppercase;
 
 h2 {
 width: inherit;
-margin-top: #{slugline_spacing}pt;
+margin-top: #{slugline_spacing}em;
 margin-bottom: 12pt;
 margin-left: 0;
 text-decoration: #{underlined_sluglines};
@@ -647,8 +646,9 @@ h4 {
 /* Goldman Sluglines */
 
 h5 {
-margin-top: #{slugline_spacing}pt;
+margin-top: #{slugline_spacing}em;
 font-weight: #{bold_sluglines};
+text-decoration: #{underlined_sluglines};
 }
 
 span.underline {
