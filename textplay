@@ -9,7 +9,7 @@
 # on Mac OS X 10.7 and Final Draft 8.0. It works for me, but I can't
 # promise it won't delete your documents or worse; use at your own risk,
 # be careful with your data, backup regularly, etc.
-
+# 
 # TEXTPLAY LICENCE
 #
 # Textplay is free software, available under a BSD-style
@@ -47,33 +47,21 @@
 #
 # ---------------------------------------------------------------------
 
-# SETTINGS
-
-title = "A Screenplay"
-font = "Courier Prime"
-
-# Courier Prime is a modern replacement for Courier.
-# More info here: http://quoteunquoteapps.com/courierprime/
-
-# Another great drop-in replacement font for Courier is Pitch.
-# More info on pitch can be found here: http://klim.co.nz/retail-fonts/pitch/
-# Your layout and page-count will be identical to using Courier
-# when using Pitch.
-
-# ------------------------------------------------------------------
-
 # HOW TEXTPLAY WORKS
-
+# 
 # This script works on your text in 5 phases:
-
+# 
 # Phase 1 allows the user to define conversion options on the command-line.
-# Phase 2 defines header and footer values for HTML and FDX conversion.
+# Phase 2 looks for something that looks like fountain title pages,
+#         and sets variables based on key/value pairs
+# Phase 3 defines header and footer values for HTML and FDX conversion.
 #         These blocks of text will be wrapped-around the transformed text
 #         when the output file is generated.
-# Phase 3 converts the input text to an interal xml markup in preperation for
+# Phase 4 converts the input text to an interal xml markup in preperation for
 #         further transformation.
-# Phase 4 converts the internal xml markup to the markup requested by the user.
-# Phase 5 dumps the result to STDOUT or an output file specified by the user.
+# Phase 5 converts the internal xml markup to the markup requested by the user.
+# Phase 6 dumps the result to STDOUT or an output file specified by the user.
+
 
 # ----- PHASE 1 -----------------------------------------------------
 
@@ -95,6 +83,12 @@ Usage: textplay [options] [input-path] [output-path]
 
 Options:
 "
+
+	# Help text
+	options[:about] = false
+	opts.on( '-a', '--about', "Display the about text" ) do
+		options[:about] = true
+	end
 
 	# The default conversion type is HTML, if the '-f' option is set, convert to FDX
 	options[:fdx] = false
@@ -119,6 +113,113 @@ end
 # Parse the options and remove them from ARGV
 optparse.parse!
 
+
+about_text = "
+TEXTPLAY
+
+Usage: textplay [options] [input-path] [output-path]
+
+• The first argument is always an input-path.
+• The second argument is always an output-path.
+• If there's no input-path textplay reads from STDIN.
+• If there's no output-path textplay prints to STDOUT, PDFs go to /temp.
+
+Options:
+    -a, --about       Display the about text
+    -f, --fdx         Convert to Final Draft .fdx
+    -p, --pdf         Convert to PDF - REQUIRES PrinceXML
+    -x, --xml         Output as raw XML - for debugging
+
+
+ABOUT TEXTPLAY
+
+Textplay is a simple ruby-script (one file, no dependancies) that
+converts screenplays written in Fountain (http://fountain.io)
+formatted plain-text to a variety of useful formats: HTML, FDX (Final
+Draft), or PDF (PrinceXML required).
+
+Textplay has been rigorously tested against fountain documents, but
+it is not perfect, if you encounter a problem please open a github
+issue: http://git.io/textplay.
+
+
+CONFIGURING TEXTPLAY
+
+Using Fountain's `key:value` title-page syntax, you can control how
+textplay interperets your screenplay. The following values can
+be customized:
+
+    * title (text) -- default: \"A Screenplay\"
+
+      You can define what name textplay uses when generating files.
+ 
+    * goldman_sluglines (on/off) -- default: on
+
+      By defualt textplay interprets any line that's all-caps as a
+      slugline.
+
+    * screenbundle_comments (on/off) -- default: on
+
+      To provide backwards-compatibility with screenbundle documents,
+      textplay interprets any line starting with 2 slahes `//` as comments.
+
+    * font (text) -- default: \"Courier Prime\"
+
+      By default textplay uses \"Courier Prime\"
+      <http://quoteunquoteapps.com/courierprime/>
+      a great alternative font for screenwriters. If you don't have that
+      installed plain Courier will be used.
+  
+      If you'd like to specify your own font, Courier Prime and Courier
+      will be used as backup fonts.
+
+    * slugline_spacing (number of 12pt lines) -- default: 1
+
+      By default textplay puts a single empty line above sluglines, you
+      can change this to any number you want.
+
+    * bold_sluglines (on/off) -- default: on
+
+    * underlined_sluglines (on/off) -- default: off
+
+    * header (text) -- empty by default
+
+      Header information is displayed on every page, use this for
+      revision numbers, dates, etc.
+
+    * footer (text) -- empty by default
+
+      Any information you'd like in the footer of every page can go here.
+
+
+For the time being, all other key/values are preserved as meta-data in
+the document, but otherwise ignored.
+
+* * *
+
+To set these values just define the key/values at the beginning of the
+document like this:
+
+title: Ron's Woodland Adventure
+font: Courier New
+goldman_sluglines: off
+bold_sluglines: on
+
+The block of key/value pairs:
+
+  a. Must be the first non-comment thing in the document.
+
+  b. Options CAN be wrapped in boneyard comments or notes
+
+  c. Options must NOT be indented
+
+  d. The block of option key/value pairs cannot contain more than
+     1 empty line. 2 empty lines will cause textplay to stop parsing
+     for options.
+
+For more details see the Fountain documentation 
+<http://fountain.io/syntax#section-titlepage>.
+"
 
 
 # ---------- INPUT / OUTPUT ---------#
@@ -145,16 +246,203 @@ else
     # if so, read it
     text = STDIN.read 
   else
-    # if nothing is in STDIN print the options banner
-    puts optparse
+    # if nothing is check for --about and send about text to less
+    if options[:about] == true
+      IO.popen("less", "w") { |f| f.puts about_text }
+    else
+      # otherwise display the option banner
+      puts optparse
+    end
     exit(-1)
   end
 
 end
 
 
-
 # ----- PHASE 2 -----------------------------------------------------
+
+# If the first thing in the document (aside from comments) is a
+# key-value pair, then enable tagging of the meta block
+
+# returns the fist non-comment line
+l1_test = /^(?! *(#|=|\|\[\[|\/\*)).+/.match(text)
+# convert match to string
+l1_test = l1_test[0]
+
+# if the first line looks like a meta-block, set the "meta" variable
+if l1_test =~ /: */
+  meta = true
+else
+  meta = false
+end
+
+
+# -------------------------
+
+# define regex for key-value pairs
+
+multi_key = /
+  # Cannot begin with spaces (that's a value)
+  ^(?!\ )
+  # the key itself
+  [\S\ ]+:\ *\n
+  # the indented value - multiple lines allowed
+  ((\ {3,}|\t).+\n?)+
+  # a single empty line is allowed - 2 empty lines ends the meta_block
+  (^\ *\n){0,1}
+/x
+
+single_key = /
+  # Cannot begin with spaces (that's a value)
+  ^(?!\ )
+  # the key
+  ([\S\ ]+):\ 
+  # the value
+  ([^\n]+)\n
+  # a single empty line is allowed - 2 empty lines ends the meta_block
+  (^\ *\n){0,1}
+/x
+
+# -------------------------
+
+# If the first (non-comment) line looks like a meta tag...
+# then assume everything that follows is a block of meta tags
+
+if meta == true
+
+  # Find the FIRST occurance of what looks like a meta_block and tag it.
+  # Very important that this is "sub" and not "gsub" - gsub will match
+  # everything in the document that looks like meta tags - not a
+  # great idea.
+  text = text.sub(/(#{multi_key}|#{single_key})+/,'<meta_block>'+"\n"+'\0'+'</meta_block>'+"\n\n")
+
+  # Identify multi-line key-value pairs...
+
+  # search for multi-line key-value pairs - and tag with markup
+  text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/){|tags|
+    tags.gsub(/#{multi_key}/, '<meta_multi>'+"\n"+'\0'+"\n"+'</meta_multi>'+"\n")
+  }
+
+  # search inside meta for keys
+  text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+    tags.gsub(/(.+): */, '<key>\1</key>')
+  }
+
+  # search inside meta-tags for values
+  text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+    tags.gsub(/( {3,}|\t)(.+)/, '<value>\2</value>')
+  }
+
+  # clean-up multi-line values
+  text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+    tags.gsub(/<\/value>\n<value>/, "\n")
+  }
+
+  # remove empty lines
+  text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
+    tags.gsub(/^\n/, "")
+  }
+
+  # Identify single-line key-value pairs
+
+  text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/){|tags|
+      tags.gsub(/#{single_key}/, '<meta-single><key>\1</key><value>\2</value></meta-single>'+"\n")
+    }
+
+end
+
+# -------------------------
+
+if meta == true
+
+  # This sets the value of variables based on the meta tags
+
+  # title
+  title = text.scan(/<key>title<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # goldman_sluglines
+  goldman_sluglines = text.scan(/<key>goldman_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # screenbundle_comments
+  screenbundle_comments = text.scan(/<key>screenbundle_comments<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # font
+  font = text.scan(/<key>font<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # slugline_spacing
+  slugline_spacing = text.scan(/<key>slugline_spacing<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # bold_sluglines
+  bold_sluglines = text.scan(/<key>bold_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # underlined_sluglines
+  underlined_sluglines = text.scan(/<key>underlined_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # header
+  header = text.scan(/<key>header<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+  # footer
+  footer = text.scan(/<key>footer<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+
+end
+
+
+# -------------------------
+
+# Set defaults for any undefined value
+
+if title == ""
+  title = "A Screenplay"
+end
+
+if goldman_sluglines == ""
+  goldman_sluglines = "on"
+end
+
+if screenbundle_comments == ""
+  screenbundle_comments = "on"
+end
+
+if font == ""
+  font = "Courier Prime"
+end
+
+if slugline_spacing == ""
+  slugline_spacing = 12
+else
+  slugline_spacing = slugline_spacing.to_i * 12
+end
+
+if bold_sluglines == ""
+  bold_sluglines = "on"
+end
+
+if underlined_sluglines == ""
+  underlined_sluglines = "off"
+end
+
+# No need to set head and footer defaults as they should be empty by default
+
+# -------------------------
+
+# Now convert the variable values to CSS for direct-insertion into the CSS
+
+if bold_sluglines == "on"
+  bold_sluglines = "bold"
+else
+  bold_sluglines = ""
+end
+
+if underlined_sluglines == "on"
+  underlined_sluglines = "underline"
+else
+  underlined_sluglines = "none"
+end
+
+# -------------------------
+
+
+# ----- PHASE 3 -----------------------------------------------------
 
 # HTML page structure and CSS
 htmlStart = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
@@ -336,11 +624,11 @@ text-transform:uppercase;
 
 h2 {
 width: inherit;
-margin-top: 12pt;
+margin-top: #{slugline_spacing}pt;
 margin-bottom: 12pt;
 margin-left: 0;
-text-decoration:none;
-font-weight: bold;
+text-decoration: #{underlined_sluglines};
+font-weight: #{bold_sluglines};
 }
 
 /* Right Transitions */
@@ -359,7 +647,8 @@ h4 {
 /* Goldman Sluglines */
 
 h5 {
-font-weight: bold;
+margin-top: #{slugline_spacing}pt;
+font-weight: #{bold_sluglines};
 }
 
 span.underline {
@@ -400,7 +689,7 @@ xmlStart = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 xmlEnd = '</root>'
 
 
-# ----- PHASE 3 -----------------------------------------------------
+# ----- PHASE 4 -----------------------------------------------------
 
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
@@ -437,9 +726,10 @@ text = text.gsub(/^[ \t]*#+[ \t]*(.*)/,'<note>\1</note>')
 text = text.gsub(/^[ \t]*=[ \t]*(.*)/,'<note>\1</note>')
 # these need not be completely removed simply because they do not span multiple lines
 
-# Textplay/Screenbundle comments
-text = text.gsub(/^[ \t]*\/\/\s?(.*)$/, '<note>\1</note>')
-
+if screenbundle_comments == "on"
+  # Textplay/Screenbundle comments
+  text = text.gsub(/^[ \t]*\/\/\s?(.*)$/, '<note>\1</note>')  
+end
 
 # -------- Transitions
 # Left-Transitions
@@ -520,21 +810,22 @@ text = text.gsub(/
 # Respect leading whitespace
 ^[\ \t]*
 # Standard prefixes, allowing for bold-italic
-((?:[\*\_]+)?(i\.?\/e|int\.?\/ext|ext|int|est)
+((?:[\*\_])*(i\.?\/e|int\.?\/ext|ext|int|est)
 # A separator between prefix and location
 (\ +|.\ ?).*) \n
 # Require trailing empty line
 ^[\ \t]* \n
 /xi, "\n"+'<sceneheading>\1</sceneheading>'+"\n\n")
 
-# GOLDMAN SLUGLINES
-text = text.gsub(/
-# Require leading empty line - or the beginning of file
-(?i:^\A | ^[\ \t]* \n)
-# Any line with all-uppercase
-^[ \t]*(?=\S)([^a-z\<\>\n]+)$
-/x, "\n"+'<slug>\1</slug>')
-
+if goldman_sluglines == "on"
+  # GOLDMAN SLUGLINES
+  text = text.gsub(/
+  # Require leading empty line - or the beginning of file
+  (?i:^\A | ^[\ \t]* \n)
+  # Any line with all-uppercase
+  ^[ \t]*(?=\S)([^a-z\<\>\n]+)$
+  /x, "\n"+'<slug>\1</slug>')
+end
 
 # ------- Misc
 
@@ -561,7 +852,7 @@ text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
 
 
-# ----- PHASE 4 ---------------------------------------------------
+# ----- PHASE 5 ---------------------------------------------------
 
 # And here we markup the text according to the set options
 
@@ -623,7 +914,7 @@ end
 
 
 
-# ----- PHASE 5 -----------------------------------------------------
+# ----- PHASE 6 -----------------------------------------------------
 
 # If an output file is specified then dump preformatted and converted
 # text to that file.
