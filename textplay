@@ -276,7 +276,6 @@ else
   meta = false
 end
 
-
 # -------------------------
 
 # define regex for key-value pairs
@@ -358,69 +357,74 @@ if meta == true
   # This sets the value of variables based on the meta tags
 
   # title
-  title = text.scan(/<key>title<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  title = text.scan(/<key>title<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # goldman_sluglines
-  goldman_sluglines = text.scan(/<key>goldman_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  goldman_sluglines = text.scan(/<key>goldman_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # screenbundle_comments
-  screenbundle_comments = text.scan(/<key>screenbundle_comments<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  screenbundle_comments = text.scan(/<key>screenbundle_comments<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # font
-  font = text.scan(/<key>font<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  font = text.scan(/<key>font<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # slugline_spacing
-  slugline_spacing = text.scan(/<key>slugline_spacing<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  slugline_spacing = text.scan(/<key>slugline_spacing<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # bold_sluglines
-  bold_sluglines = text.scan(/<key>bold_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  bold_sluglines = text.scan(/<key>bold_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # underlined_sluglines
-  underlined_sluglines = text.scan(/<key>underlined_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  underlined_sluglines = text.scan(/<key>underlined_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # header
-  header = text.scan(/<key>header<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  header = text.scan(/<key>header<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
   # footer
-  footer = text.scan(/<key>footer<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).to_s
+  footer = text.scan(/<key>footer<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
 end
 
+
 # -------------------------
 
-# Set defaults for any undefined value
+# Set some defaults for the variables we're about to set
 
 if title == nil
   title = "A Screenplay"
 end
 
 if goldman_sluglines == nil
-  goldman_sluglines = "on"
+goldman_sluglines = "on"
 end
 
 if screenbundle_comments == nil
-  screenbundle_comments = "on"
+screenbundle_comments = "on"
+end
+
+if bold_sluglines == ""
+bold_sluglines = "on"
+end
+
+if underlined_sluglines == ""
+underlined_sluglines = "off"
 end
 
 if font == nil
-  font = "Courier Prime"
+font = "Courier Prime"
 end
 
 if slugline_spacing == nil
-  slugline_spacing = "1"
-else
-  slugline_spacing = slugline_spacing.to_i
+slugline_spacing = "1"
 end
 
-if bold_sluglines == nil
-  bold_sluglines = "on"
+if header == nil
+header = ""
 end
 
-if underlined_sluglines == nil
-  underlined_sluglines = "off"
+if footer == nil
+footer = ""
 end
-
-# No need to set head and footer defaults as they should be empty by default
 
 # -------------------------
 
@@ -437,6 +441,19 @@ if underlined_sluglines == "on"
 else
   underlined_sluglines = "none"
 end
+
+# for debugging
+
+# print "title: #{title}\n"
+# print "goldman_sluglines: #{goldman_sluglines}\n"
+# print "screenbundle_comments: #{screenbundle_comments}\n"
+# print "bold_sluglines: #{bold_sluglines}\n"
+# print "underlined_sluglines: #{underlined_sluglines}\n"
+# print "font: #{font}\n"
+# print "slugline_spacing: #{slugline_spacing}\n"
+# print "header: #{header}\n"
+# print "footer: #{footer}\n"
+# print "\n\n" + text
 
 # -------------------------
 
@@ -858,6 +875,7 @@ text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
 # Final Draft formatting
 if options[:fdx] == true
+  text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '')
   text = text.gsub(/<secret \/>/, '')
   text = text.gsub(/<note>/, '<Paragraph><ScriptNote><Text>')
   text = text.gsub(/<\/note>/, '</Text></ScriptNote></Paragraph>')
@@ -889,6 +907,7 @@ else
   # default HTML formatting  
   text = text.gsub(/<note>/, '<p class="comment">')
   text = text.gsub(/<\/note>/, '</p>')
+  text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '<!--\0-->')
   text = text.gsub(/<secret \/>/, '')
   text = text.gsub(/<page-break \/>/, '<div class="page-break"></div>')
   text = text.gsub(/<transition>/, '<h3 class="right-transition">')
