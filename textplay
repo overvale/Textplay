@@ -209,7 +209,7 @@ The block of key/value pairs:
 
   a. Must be the first non-comment thing in the document.
 
-  b. Options CAN be wrapped in boneyard comments or notes
+  b. Options CAN be wrapped in boneyard comments
 
   c. Options must NOT be indented
 
