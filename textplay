@@ -5,8 +5,8 @@
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
-# Textplay was build and tested by Oliver using Ruby 1.8.7
-# on Mac OS X 10.7 and Final Draft 8.0. It works for me, but I can't
+# Textplay was build and tested by Oliver using Ruby 2.0.0p247
+# on Mac OS X 10.9 and Final Draft 8.0. It works for me, but I can't
 # promise it won't delete your documents or worse; use at your own risk,
 # be careful with your data, backup regularly, etc.
 # 
