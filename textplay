@@ -230,13 +230,13 @@ For more details see the Fountain documentation
 if ARGV[1]
 
   # read the first argument as an input file
-  text = File.read(ARGV[0])
+  text = File.read(ARGV[0], :encoding => "UTF-8")
 
 # if there's only 1 argument (an input path)
 elsif ARGV[0]
 
   # read the first argument as an input file
-  text = File.read(ARGV[0])
+  text = File.read(ARGV[0], :encoding => "UTF-8")
 
 # if no input and no output
 else
