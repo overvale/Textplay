@@ -402,11 +402,11 @@ if screenbundle_comments == nil
 screenbundle_comments = "on"
 end
 
-if bold_sluglines == ""
+if bold_sluglines == nil
 bold_sluglines = "on"
 end
 
-if underlined_sluglines == ""
+if underlined_sluglines == nil
 underlined_sluglines = "off"
 end
 
