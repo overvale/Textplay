@@ -63,7 +63,7 @@
 # Phase 6 dumps the result to STDOUT or an output file specified by the user.
 
 
-# ----- PHASE 1 -----------------------------------------------------
+# NOTE: PHASE 1 - Options
 
 require 'optparse'
 require 'fcntl'
@@ -73,21 +73,18 @@ options = {}
 optparse = OptionParser.new do|opts|
 
 	# This is the help banner, which just explains the command syntax
-	opts.banner = "
-Usage: textplay [options] [input-path] [output-path]
-
-• The first argument is always an input-path.
-• The second argument is always an output-path.
-• If there's no input-path textplay reads from STDIN.
-• If there's no output-path textplay prints to STDOUT, PDFs go to /temp.
-
-Options:
-"
+	opts.banner = "Usage: textplay [options] [input-path] [output-path]"
 
 	# Help text
-	options[:about] = false
-	opts.on( '-a', '--about', "Display the about text" ) do
-		options[:about] = true
+	options[:help] = false
+	opts.on( '-h', '--help', "Display the help text" ) do
+		options[:help] = true
+	end
+
+    # Create snippet instead of full document with headers/footers
+	options[:snippet] = false
+	opts.on( '-s', '--snippet', "Do not include document headers/footers" ) do
+		options[:snippet] = true
 	end
 
 	# The default conversion type is HTML, if the '-f' option is set, convert to FDX
@@ -114,7 +111,7 @@ end
 optparse.parse!
 
 
-about_text = "
+help_text = "
 TEXTPLAY
 
 Usage: textplay [options] [input-path] [output-path]
@@ -125,10 +122,11 @@ Usage: textplay [options] [input-path] [output-path]
 • If there's no output-path textplay prints to STDOUT, PDFs go to /temp.
 
 Options:
-    -a, --about       Display the about text
-    -f, --fdx         Convert to Final Draft .fdx
+    -h, --help        Display the help text
+    -s, --snippet     Do not include document headers/footers
+    -f, --fdx         Convert to Final Draft .fdx instead of HTML
     -p, --pdf         Convert to PDF - REQUIRES PrinceXML
-    -x, --xml         Output as raw XML - for debugging
+    -x, --xml         Output as the internal raw XML
 
 
 ABOUT TEXTPLAY
@@ -195,8 +193,6 @@ be customized:
 For the time being, all other key/values are preserved as meta-data in
 the document, but otherwise ignored.
 
-* * *
-
 To set these values just define the key/values at the beginning of the
 document like this:
 
@@ -222,7 +218,7 @@ For more details see the Fountain documentation
 "
 
 
-# ---------- INPUT / OUTPUT ---------#
+# NOTE: Input / Output
 
 # Some of this is redundant but I prefer specifying every contingency in case I need to control each step
 
@@ -246,9 +242,9 @@ else
     # if so, read it
     text = STDIN.read 
   else
-    # if nothing is check for --about and send about text to less
-    if options[:about] == true
-      IO.popen("less", "w") { |f| f.puts about_text }
+    # if nothing is check for --help and send help text to less
+    if options[:help] == true
+      IO.popen("less", "w") { |f| f.puts help_text }
     else
       # otherwise display the option banner
       puts optparse
@@ -259,7 +255,7 @@ else
 end
 
 
-# ----- PHASE 2 -----------------------------------------------------
+# NOTE: PHASE 2 - Set title-page and meta info
 
 # If the first thing in the document (aside from comments) is a
 # key-value pair, then enable tagging of the meta block
@@ -458,7 +454,7 @@ end
 # -------------------------
 
 
-# ----- PHASE 3 -----------------------------------------------------
+# NOTE: PHASE 3 - Set HTML, XML, etc. header and footers
 
 # HTML page structure and CSS
 htmlStart = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
@@ -706,7 +702,7 @@ xmlStart = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 xmlEnd = '</root>'
 
 
-# ----- PHASE 4 -----------------------------------------------------
+# NOTE: PHASE 4 - Convert input to XML
 
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
@@ -858,6 +854,10 @@ text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, 
 # This cleans up action paragraphs with line-breaks.
 text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
 
+# TODO: optional re-wrapping of action paragraphs
+# if options[:wrap] == true
+# end
+
 # Convert tabs to spaces within action
 text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
@@ -869,7 +869,7 @@ text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
 
 
-# ----- PHASE 5 ---------------------------------------------------
+# NOTE: PHASE 5 - Convert XML to requested format
 
 # And here we markup the text according to the set options
 
@@ -933,7 +933,7 @@ end
 
 
 
-# ----- PHASE 6 -----------------------------------------------------
+# NOTE: PHASE 6 - Output
 
 # If an output file is specified then dump preformatted and converted
 # text to that file.
@@ -958,14 +958,22 @@ if ARGV[1]
 		system "prince /tmp/textplay.html #{ARGV[1]}"
 	elsif options[:xml] == true
     # output xml if requested
+		if options[:snippet] == false
 		newFile.puts xmlStart
+		end
 		newFile.puts text
+		if options[:snippet] == false
 		newFile.puts xmlEnd
+		end
 	else
     # otherwise fallback to HTML
+		if options[:snippet] == false
 		newFile.puts htmlStart
+		end
 		newFile.puts text
+		if options[:snippet] == false
 		newFile.puts htmlEnd
+		end
 	end
 else
 # If no output file is specified then pass the output to STDOUT.
@@ -986,13 +994,21 @@ else
 		system "prince /tmp/textplay.html; open /tmp/textplay.pdf"
 	elsif options[:xml] == true
     # output xml if requested
+		if options[:snippet] == false
 		puts xmlStart
+		end
         puts text
+        if options[:snippet] == false
         puts xmlEnd
+        end
 	else
     # otherwise fallback to HTML
+		if options[:snippet] == false
 		puts htmlStart
+		end
 		puts text
+		if options[:snippet] == false
 		puts htmlEnd
+		end
 	end
 end
