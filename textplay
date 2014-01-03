@@ -235,7 +235,9 @@ page-break-before:avoid;
 div.page-break {
 page-break-after:always;
 }
-
+h3 {
+page-break-before: avoid;
+}
 /* by default Prince bookmarks all headings, no thanks */
 h3, h4, h5, h6 {
 prince-bookmark-level: none;
