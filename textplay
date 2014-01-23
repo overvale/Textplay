@@ -386,39 +386,39 @@ end
 
 # Set some defaults for the variables we're about to set
 
-if title == nil
+if title == nil or title == ""
   title = "A Screenplay"
 end
 
-if goldman_sluglines == nil
+if goldman_sluglines == nil or goldman_sluglines == ""
 goldman_sluglines = "on"
 end
 
-if screenbundle_comments == nil
+if screenbundle_comments == nil or screenbundle_comments == ""
 screenbundle_comments = "on"
 end
 
-if bold_sluglines == nil
+if bold_sluglines == nil or bold_sluglines == ""
 bold_sluglines = "on"
 end
 
-if underlined_sluglines == nil
+if underlined_sluglines == nil or underlined_sluglines == ""
 underlined_sluglines = "off"
 end
 
-if font == nil
+if font == nil or font == ""
 font = "Courier Prime"
 end
 
-if slugline_spacing == nil
+if slugline_spacing == nil or slugline_spacing == ""
 slugline_spacing = "1"
 end
 
-if header == nil
+if header == nil or header == ""
 header = ""
 end
 
-if footer == nil
+if footer == nil or footer == ""
 footer = ""
 end
 
