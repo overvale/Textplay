@@ -30,6 +30,9 @@ Textplay has three options you can call in the command line. `--help`, `--fdx`, 
 * `-p`, `--pdf` Converts the file to PDF ([PrinceXML][prince] must be installed on your system).
 * `-x`, `--xml` Output as the internal raw XML
 
+## Configuring textplay
+
+Want to customize how textplay interprets your screenplay? Want to change the layout of your screenplay? See `--help` for info.
 
 ## Support for the Fountain Format
 

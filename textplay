@@ -180,6 +180,14 @@ be customized:
 
     * underlined_sluglines (on/off) -- default: off
 
+    * wrap_paragraphs (on/off) -- default: off
+
+      By default textplay takes every carriage return as intent
+      (see: http://fountain.io/syntax#section-br). If you'd like textplay
+      to wrap your action paragraphs, turn this option on. This option is
+      particularly useful if your screenplay is under version control and
+      you follow this advice: <http://rhodesmill.org/brandon/2011/one-sentence-per-line/>
+
     * header (text) -- empty by default
 
       Header information is displayed on every page, use this for
@@ -373,6 +381,9 @@ if meta == true
   # underlined_sluglines
   underlined_sluglines = text.scan(/<key>underlined_sluglines<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
+  # wrap linebreaks in paragraphs
+  wrap_paragraphs = text.scan(/<key>wrap_paragraphs<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
+
   # header
   header = text.scan(/<key>header<\/key>\n?<value>([\s\S]+?)(?=<\/value>)/i).join
 
@@ -414,6 +425,10 @@ if slugline_spacing == nil or slugline_spacing == ""
 slugline_spacing = "1"
 end
 
+if wrap_paragraphs == nil or wrap_paragraphs == ""
+wrap_paragraphs = "off"
+end
+
 if header == nil or header == ""
 header = ""
 end
@@ -436,6 +451,12 @@ if underlined_sluglines == "on"
   underlined_sluglines = "underline"
 else
   underlined_sluglines = "none"
+end
+
+if wrap_paragraphs == "on"
+  wrap_paragraphs = "normal"
+else
+  wrap_paragraphs = "pre-wrap"
 end
 
 # for debugging
@@ -564,7 +585,7 @@ margin-top:12pt;
 margin-bottom:12pt;
 margin-left:0;
 width:auto;
-white-space: pre-wrap;
+white-space: #{wrap_paragraphs};
 }
 
 /*Character Names*/
