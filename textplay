@@ -116,15 +116,17 @@ TEXTPLAY
 
 Usage: textplay [options] [input-path] [output-path]
 
-• The first argument is always an input-path.
-• The second argument is always an output-path.
-• If there's no input-path textplay reads from STDIN.
-• If there's no output-path textplay prints to STDOUT, PDFs go to /temp.
+- The first argument is always an input-path.
+- The second argument is always an output-path.
+- If there's no input-path textplay reads from STDIN.
+- If there's no output-path textplay prints to STDOUT, PDFs go to /tmp.
+
+By default textplay converts to a fully-formed HTML document.
 
 Options:
     -h, --help        Display the help text
     -s, --snippet     Do not include document headers/footers
-    -f, --fdx         Convert to Final Draft .fdx instead of HTML
+    -f, --fdx         Convert to Final Draft .fdx
     -p, --pdf         Convert to PDF - REQUIRES PrinceXML
     -x, --xml         Output as the internal raw XML
 
@@ -138,7 +140,7 @@ Draft), or PDF (PrinceXML required).
 
 Textplay has been rigorously tested against fountain documents, but
 it is not perfect, if you encounter a problem please open a github
-issue: http://git.io/textplay.
+issue: <https://github.com/olivertaylor/Textplay/issues>
 
 
 CONFIGURING TEXTPLAY
@@ -156,10 +158,10 @@ be customized:
       By defualt textplay interprets any line that's all-caps as a
       slugline.
 
-    * screenbundle_comments (on/off) -- default: on
+    * screenbundle_comments (on/off) -- default: off
 
       To provide backwards-compatibility with screenbundle documents,
-      textplay interprets any line starting with 2 slahes `//` as comments.
+      textplay can interpret any line starting with 2 slahes `//` as comments.
 
     * font (text) -- default: \"Courier Prime\"
 
@@ -406,7 +408,7 @@ goldman_sluglines = "on"
 end
 
 if screenbundle_comments == nil or screenbundle_comments == ""
-screenbundle_comments = "on"
+screenbundle_comments = "off"
 end
 
 if bold_sluglines == nil or bold_sluglines == ""
@@ -468,6 +470,7 @@ end
 # print "underlined_sluglines: #{underlined_sluglines}\n"
 # print "font: #{font}\n"
 # print "slugline_spacing: #{slugline_spacing}\n"
+# print "wrap_paragraphs: #{wrap_paragraphs}\n"
 # print "header: #{header}\n"
 # print "footer: #{footer}\n"
 # print "\n\n" + text
