@@ -23,7 +23,7 @@ Calling Textplay from the command-line is simple:
 * If there's no output-path textplay prints to `STDOUT` (PDFs go to `/tmp/`).
 * If there's no input-path textplay reads from `STDIN`.
 
-Textplay has three options you can call in the command line. `--help`, `--fdx`, and `--pdf` (`-h`, `-f`, and `-p`respectively).
+Textplay has a number of options you can call in the command line:
 
 * `-h`, `--help` Displays the help text, including configuration options.
 * `-s`, `--snippet` Create snippet instead of full document with headers/footers

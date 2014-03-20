@@ -916,13 +916,8 @@ text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, 
 # This cleans up line-breaks within dialogue blocks
 text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
 
-
 # This cleans up action paragraphs with line-breaks.
 text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
-
-# TODO: optional re-wrapping of action paragraphs
-# if options[:wrap] == true
-# end
 
 # Convert tabs to spaces within action
 text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
