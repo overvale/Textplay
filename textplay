@@ -746,11 +746,9 @@ text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 text = text.gsub(/^[ \t]+$/, '')
 
 # -------- fountain escapes
-# force lines ending with {to: } to be action instead of transition
-text = text.gsub(/^(.+ )TO: +$/, "\n"+'<action>\1TO:</action>')
 
-# escape caps lines => action - when two spaces are at end of line
-text = text.gsub(/^[\ \t]*\n([\ \t]*[^\na-z]+)  $/, "\n"+'<action>\1</action>')
+# Action escape
+text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 
 # Boneyard
 text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
