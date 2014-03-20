@@ -5,10 +5,9 @@
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
-# Textplay was build and tested by Oliver using Ruby 2.0.0p247
-# on Mac OS X 10.9 and Final Draft 8.0. It works for me, but I can't
-# promise it won't delete your documents or worse; use at your own risk,
-# be careful with your data, backup regularly, etc.
+# Textplay was built using Mac OS 10.6-9 and Ruby 1.8-2.0. I have only
+# tested it in this environment, if you want to run Textplay in another
+# environment (such as Windows) you may have to modify the code.
 # 
 # TEXTPLAY LICENCE
 #
@@ -648,6 +647,16 @@ width:2.1in;
 margin-left:.32in;
 }
 
+/* Lyrics */
+span.lyric {
+font-style: italic;
+}
+
+span.lyric i {
+font-style: normal;
+}
+
+
 /* Sluglines and Transitions */
 
 h1,h2,h3,h4,h5,h6 {
@@ -828,6 +837,9 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
 	talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
 }
 
+# SEARCH THE DIALOGUE-BLOCK FOR LYRICS
+text = text.gsub(/(<talk>)~(.+)(<\/talk>)/, '\1<lyric>\2</lyric>\3')
+
 
 # Dual Dialogue Blocks
 # --------------------
@@ -877,6 +889,14 @@ text = text.gsub(/([ \t\-_:;>])\*{2}([^\*\n]+)\*{2}(?=[ \t\)\]<\-_&;:?!.,])/, '\
 text = text.gsub(/([ \t\-_:;>])\*{1}([^\*\n]+)\*{1}(?=[ \t\)\]<\-_&;:?!.,])/, '\1<i>\2</i>')
 text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, '\1<u>\2</u>')
 
+
+
+# ---------- Cleanup
+
+# This cleans up line-breaks within dialogue blocks
+text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
+
+
 # This cleans up action paragraphs with line-breaks.
 text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
 
@@ -888,10 +908,6 @@ text = text.gsub(/<\/action>[ \t]*(\n)[ \t]*<action>/,'\1')
 text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
 }
-
-# This cleans up line-breaks within dialogue blocks
-text = text.gsub(/<\/talk>[ \t]*(\n)[ \t]*<talk>/,'\1')
-
 
 
 
@@ -952,6 +968,8 @@ else
   text = text.gsub(/<\/paren>/, '</dd>')
   text = text.gsub(/<talk>/, '<dd class="dialogue">')
   text = text.gsub(/<\/talk>/, '</dd>')
+  text = text.gsub(/<lyric>/, '<span class="lyric">')
+  text = text.gsub(/<\/lyric>/, '</span>')
   text = text.gsub(/<action>/, '<p class="action">')
   text = text.gsub(/<\/action>/, '</p>')
 end
