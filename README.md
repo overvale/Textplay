@@ -44,6 +44,7 @@ Using Fountain's `key:value` title-page syntax, you can control how textplay int
 * Textplay is smart about what constitutes a transition. Usually, there's no need to escape transitions, but you can.
 * An action line that contains no lower-case letters is converted to a slugline.
 * In some cases Textplay does not assume that every whitespace character you type (newlines, spaces, and tabs) is intentional. For example, if you type one space on the line immediately below an all-caps line, Fountain assumes you'd like a Character saying “ ”. Textplay assumes you accidentally typed a space.
+* Textplay only allows a single blank line between elements.
 
 ### Q. What parts of the Fountain spec are not supported?
 
