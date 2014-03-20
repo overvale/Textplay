@@ -808,31 +808,52 @@ text = text.gsub(/
 
 
 # ------- Dialogue
-# IDENTIFY AND TAG A DIALOGUE-BLOCK
+
+# ESCAPED DIALOGUE BLOCKS
 text = text.gsub(/
 # Require preceding empty line
 ^[\ \t]* \n
 # Character Name
-^[\ \t]* [^a-z\n\t]+ \n
+^\@(.+)\n
 # Dialogue
 (^[\ \t]* .+ \n)+
 # Require trailing empty line
 ^[\ \t]*$
 /x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
 
+
+# STANDARD DIALOGUE-BLOCKS
+text = text.gsub(/
+# Require preceding empty line
+^[\ \t]* \n
+# Character Name
+^[\ \t]*[^a-z\n\t]+(\ *\(.+\))?\n
+# Dialogue
+(^[\ \t]* .+ \n)+
+# Require trailing empty line
+^[\ \t]*$
+/x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
+
+
+# SEARCH THE DIALOGUE-BLOCK FOR ESCAPED CHARACTERS
+text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
+    character.gsub(/(<dialogue>\n)[\ \t]*\@(.+)(?=\n)/, '\1<character>\2</character>')
+}
+
+
 # SEARCH THE DIALOGUE-BLOCK FOR CHARACTERS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
-	character.gsub(/(<dialogue>\n)[ \t]*([^a-z\n]+)(?=\n)/, '\1<character>\2</character>')
+    character.gsub(/(<dialogue>\n)[\ \t]*([^a-z\n\t]+(\ *\(.+\))?)(?=\n)/, '\1<character>\2</character>')
 }
 
 # SEARCH THE DIALOGUE-BLOCK FOR PARENTHETICALS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|paren|
-	paren.gsub(/^[ \t]*(\([^\)]+\))[ \t]*(?=\n)/, '<paren>\1</paren>')
+    paren.gsub(/^[ \t]*(\([^\)]+\))[ \t]*(?=\n)/, '<paren>\1</paren>')
 }
 
 # SEARCH THE DIALOGUE-BLOCK FOR DIALOG
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
-	talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
+    talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
 }
 
 # SEARCH THE DIALOGUE-BLOCK FOR LYRICS
