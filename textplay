@@ -751,15 +751,16 @@ text = text.gsub(/^[ \t]+$/, '')
 text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 
 # Boneyard
-text = text.gsub(/\/\*(.|\n)+?\*\//, '<secret />')
+text = text.gsub(/\/\*(.|\n)+?\*\//, '')
 
 # Fountain [[notes]]
-text = text.gsub(/\[{2}[^\]]+\]{2}/,'<secret />')
+text = text.gsub(/\[{2}[^\]]+\]{2}/,'')
 
-# Boneyards and Notes are removed from the text because it is impossible
-# to prevent additional transformations inside them when newlines are present.
-# And since Fountain is an archival-format, there's no need to maintain notes
-# across conversions (retaining notes in FDX being an exception).
+# Boneyards and Notes are completely removed from the text because it is
+# impossible to prevent additional transformations inside them when newlines
+# are present, and so they don't interfere with the transformation of adjacent
+# elements. And since Fountain is an archival-format, there's no need to maintain
+# notes across conversions (retaining notes in FDX being an exception).
 
 # Fountain Rules
 text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
