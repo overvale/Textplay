@@ -689,8 +689,8 @@ font-weight: #{bold_sluglines};
 /* Right Transitions */
 
 h3 {
-margin-left: 4in;
-width: 2in;
+text-align: right;
+width: 100%;
 }
 
 /* Left Transitions */
