@@ -308,7 +308,7 @@ single_key = /
   # Cannot begin with spaces (that's a value)
   ^(?!\ )
   # the key
-  ([\S\ ]+):\ 
+  ([\S\ ]+):\ *
   # the value
   ([^\n]+)\n
   # a single empty line is allowed - 2 empty lines ends the meta_block
