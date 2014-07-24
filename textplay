@@ -899,7 +899,7 @@ text = text.gsub(/
 # Standard prefixes, allowing for bold-italic
 ((?:[\*\_])*(i\.?\/e|int\.?\/ext|ext|int|est)
 # A separator between prefix and location
-(\ +|.\ ?).*) \n
+(\ +|\.\ ?).*) \n
 # Require trailing empty line
 ^[\ \t]* \n
 /xi, "\n"+'<sceneheading>\1</sceneheading>'+"\n\n")
