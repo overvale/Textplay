@@ -8,7 +8,7 @@ Textplay has been rigorously tested against fountain documents, but it is not pe
 ## Installation
 
 1. I recommend cloning this repository somewhere convenient, then creating a symbolic link to `textplay` in `/usr/local/bin/`
-2. `gem install textplay`
+2. `gem install textplay` (gem may not always be up-to-date)
 
 Textplay was built using Mac OS 10.6-9 and Ruby 1.8-2.0. I have only tested it in this environment, if you want to run Textplay in another environment (such as Windows) you may have to modify the code.
 
