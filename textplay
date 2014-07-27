@@ -595,7 +595,7 @@ margin-top:12pt;
 margin-bottom:12pt;
 margin-left:0;
 padding-right:.25in;
-width:auto;
+width:6in;
 white-space: #{wrap_paragraphs};
 }
 
@@ -719,7 +719,8 @@ text-decoration:underline;
 display:none
 }
 
-.revised {border-right:.2em solid #666}
+.revised {border-right:.5em solid #aaa;}
+
 
 </style>
 </head>

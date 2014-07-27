@@ -1,0 +1,63 @@
+#!/usr/bin/ruby
+
+require 'fcntl'
+
+# check to see if anything is in SDTIN
+if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+# if so, read it
+trigger = TRUE 
+else
+trigger = FALSE
+end
+
+
+if trigger == TRUE
+
+# read the input
+text = STDIN.read
+
+# Remove diff header of the 2 files
+text = text.gsub(/^[\-\+]{3}.*\n/, '')
+
+# Remove change hunks
+text = text.gsub(/^@@.*\n/, '')
+
+# Remove deleted lines
+text = text.gsub(/^-(?!-).*\n/, '')
+
+# Mark revised lines
+text = text.gsub(/^\+([^\n]+)(\n?)/, "++" + '\1' + '\2')
+
+# Remove additions of empty lines
+text = text.gsub(/^\+\s*$/, '')
+
+# Remove space in front of unchanged lines
+text = text.gsub(/^ (.*\n)/, '\1')
+
+print text
+
+else
+
+usage = <<USE
+-------------------------------------------------------------
+textplay-diff accepts input over STDIN and prints to STDOUT
+-------------------------------------------------------------
+textplay-diff converts diffs of fountain-formatted documents
+into fountain documents with revision markup.
+
+1. Generate a diff of the 2 revisions you want to compare.
+   $ diff --unified=999999 a.txt b.txt
+   $ git-diff --unified=999999 <commit> <commit> a.txt
+
+2. Run the diff through this script to generate a fountain
+   document with revision marks.
+
+3. Run your fountain document with revision marks through
+   'textplay' to generate documents with rendered
+   revision marks.
+-------------------------------------------------------------
+USE
+
+print usage
+
+end
