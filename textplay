@@ -631,14 +631,20 @@ white-space: pre-wrap;
 
 /* Dual-Dialogue-blocks */
 
-dl {clear:both;}
+div.dialogue_wrapper {
+overflow:auto;
+width:100%;
+}
 
 dl.dual {
 width:2.9in;
-clear:none;
 }
 
-dl.dual dt, dl.dual dd { margin-left:0; width:100%;}
+dl.dual dt, dl.dual dd {
+margin-left:0;
+width:2.5in;
+padding-right:.25in;
+}
 
 dl.dual.first {
 float:left;
@@ -884,9 +890,11 @@ text = text.gsub(/(<talk>)~(.+)(<\/talk>)/, '\1<lyric>\2</lyric>\3')
 # mark dual-dialogue blocks with a <join-marker>
 text = text.gsub(/^\n(<dialogue>\n<character>.+?)( +\^)(<\/character>)/, '<join-marker>' + "\n" + '\1\3')
 
-# remove the <join-marker> and add "class" to <dialogue> tag
-text = text.gsub(/\n\n<dialogue>\n((?:.+\n)+)<join-marker>\n<dialogue>/, "\n\n" + '<dialogue class="dual first">' + "\n" + '\1' + "\n" + '<dialogue class="dual second">')
+# wrap dual dialogue in wrapper
+text = text.gsub(/\n\n(<dialogue>\n(?:(?:.+\n)+))(<join-marker>)((?:\n.+)+)/, "\n\n" + '<wrap>' + "\n" + '\1\2\3' "\n" + '</wrap>')
 
+# remove the <join-marker> and add "class" to <dialogue> tag
+text = text.gsub(/(?<=<wrap>\n)<dialogue>\n((?:.+\n)+)<join-marker>\n<dialogue>/, '<dialogue class="dual first">' + "\n" + '\1' + '<dialogue class="dual second">')
 
 
 # ------- Scene Headings
@@ -992,6 +1000,8 @@ else
   text = text.gsub(/<\/slug>/, '</h5>')
   text = text.gsub(/<center>/, '<p class="center">')
   text = text.gsub(/<\/center>/, '</p>')
+  text = text.gsub(/<wrap>/, '<div class="dialogue_wrapper">')
+  text = text.gsub(/<\/wrap>/, '</div>')
   text = text.gsub(/<dialogue( class="dual (first|second)")?>/,'<dl\1>')
   text = text.gsub(/<\/dialogue>/,'</dl>')
   text = text.gsub(/<character>/, '<dt class="character">')
