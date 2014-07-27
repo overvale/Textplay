@@ -1014,16 +1014,6 @@ else
   text = text.gsub(/<\/lyric>/, '</span>')
   text = text.gsub(/<action>/, '<p class="action">')
   text = text.gsub(/<\/action>/, '</p>')
-
-  # Mark revised elements as revised
-  text = text.gsub(/">\+{2} */, ' revised">')
-  # not tested with:
-  #   - dual dialogue
-  #   - notes and boneyards
-  #   - inline markup (bold, etc.)
-  #   - page breaks
-  
-
 end
 
 
