@@ -56,7 +56,7 @@
 # Phase 3 defines header and footer values for HTML and FDX conversion.
 #         These blocks of text will be wrapped-around the transformed text
 #         when the output file is generated.
-# Phase 4 converts the input text to an interal xml markup in preperation for
+# Phase 4 converts the input text to an internal xml markup in preparation for
 #         further transformation.
 # Phase 5 converts the internal xml markup to the markup requested by the user.
 # Phase 6 dumps the result to STDOUT or an output file specified by the user.
@@ -132,7 +132,7 @@ Options:
 
 ABOUT TEXTPLAY
 
-Textplay is a simple ruby-script (one file, no dependancies) that
+Textplay is a simple ruby-script (one file, no dependencies) that
 converts screenplays written in Fountain (http://fountain.io)
 formatted plain-text to a variety of useful formats: HTML, FDX (Final
 Draft), or PDF (PrinceXML required).
@@ -145,7 +145,7 @@ issue: <https://github.com/olivertaylor/Textplay/issues>
 CONFIGURING TEXTPLAY
 
 Using Fountain's `key:value` title-page syntax, you can control how
-textplay interperets your screenplay. The following values can
+textplay interprets your screenplay. The following values can
 be customized:
 
     * title (text) -- default: \"A Screenplay\"
@@ -154,7 +154,7 @@ be customized:
  
     * goldman_sluglines (on/off) -- default: on
 
-      By defualt textplay interprets any line that's all-caps as a
+      By default textplay interprets any line that's all-caps as a
       slugline.
 
     * screenbundle_comments (on/off) -- default: off
@@ -187,7 +187,7 @@ be customized:
       (see: http://fountain.io/syntax#section-br). If you'd like textplay
       to wrap your action paragraphs, turn this option on. This option is
       particularly useful if your screenplay is under version control and
-      you follow this advice: <http://rhodesmill.org/brandon/2011/one-sentence-per-line/>
+      you follow this advice: <http://rhodesmill.org/brandon/2012/one-sentence-per-line/>
 
     * header (text) -- empty by default
 
@@ -322,7 +322,7 @@ single_key = /
 
 if meta == true
 
-  # Find the FIRST occurance of what looks like a meta_block and tag it.
+  # Find the FIRST occurrence of what looks like a meta_block and tag it.
   # Very important that this is "sub" and not "gsub" - gsub will match
   # everything in the document that looks like meta tags - not a
   # great idea.
@@ -875,7 +875,7 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|paren|
     paren.gsub(/^[ \t]*(\([^\)]+\))[ \t]*(?=\n)/, '<paren>\1</paren>')
 }
 
-# SEARCH THE DIALOGUE-BLOCK FOR DIALOG
+# SEARCH THE DIALOGUE-BLOCK FOR DIALOGUE
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|talk|
     talk.gsub(/^[ \t]*(?! )([^<\n]+)$/, '<talk>\1</talk>')
 }
@@ -1022,7 +1022,7 @@ end
 # If an output file is specified then dump preformatted and converted
 # text to that file.
 if ARGV[1]
-	# create a new file at the path suppied by the user
+	# create a new file at the path supplied by the user
 	newFile = File.new(ARGV[1], "w+")
 	# if FDX, then do this
 	if options[:fdx] == true
