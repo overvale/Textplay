@@ -59,7 +59,7 @@
 # Phase 4 converts the input text to an internal xml markup in preparation for
 #         further transformation.
 # Phase 5 converts the internal xml markup to the markup requested by the user.
-# Phase 6 dumps the result to STDOUT or an output file specified by the user.
+# Phase 6 dumps the result to STDOUT.
 
 
 # NOTE: PHASE 1 - Options
@@ -72,11 +72,11 @@ options = {}
 optparse = OptionParser.new do|opts|
 
 	# This is the help banner, which just explains the command syntax
-	opts.banner = "Usage: textplay [options] [input-path] [output-path]"
+	opts.banner = "Usage: textplay [options] (use Unix redirects to create files)"
 
 	# Help text
 	options[:help] = false
-	opts.on( '-h', '--help', "Display the help text" ) do
+	opts.on( '-h', '--help', "Display help" ) do
 		options[:help] = true
 	end
 
@@ -90,12 +90,6 @@ optparse = OptionParser.new do|opts|
 	options[:fdx] = false
 	opts.on( '-f', '--fdx', "Convert to Final Draft .fdx" ) do
 		options[:fdx] = true
-	end
-
-	# if the '-p' option is set pass the html output to PrinceXML
-	options[:pdf] = false
-	opts.on( '-p', '--pdf', "Convert to PDF - REQUIRES PrinceXML" ) do
-		options[:pdf] = true
 	end
 
 	# if the '-x' option is set use the internal xml format for export
@@ -113,12 +107,19 @@ optparse.parse!
 help_text = "
 TEXTPLAY
 
-Usage: textplay [options] [input-path] [output-path]
+Usage: textplay [options]
 
-- The first argument is always an input-path.
-- The second argument is always an output-path.
-- If there's no input-path textplay reads from STDIN.
-- If there's no output-path textplay prints to STDOUT, PDFs go to /tmp.
+Texplay is designed to be a Unix tool, thus it always reads from
+STDIN and writes to STDOUT. To make a file use standard Unix
+redirection. For example:
+
+    textplay < screenplay.fountain > screenplay.html
+
+As another example, textplay has been tested extensively with 
+PrinceXML (http://princexml.com). To make a PDF from a fountain
+document, use this:
+
+    cat screenplay.fountain | textplay | prince - screenplay.pdf
 
 By default textplay converts to a fully-formed HTML document.
 
@@ -126,7 +127,6 @@ Options:
     -h, --help        Display the help text
     -s, --snippet     Do not include document headers/footers
     -f, --fdx         Convert to Final Draft .fdx
-    -p, --pdf         Convert to PDF - REQUIRES PrinceXML
     -x, --xml         Output as the internal raw XML
 
 
@@ -134,8 +134,7 @@ ABOUT TEXTPLAY
 
 Textplay is a simple ruby-script (one file, no dependencies) that
 converts screenplays written in Fountain (http://fountain.io)
-formatted plain-text to a variety of useful formats: HTML, FDX (Final
-Draft), or PDF (PrinceXML required).
+formatted plain-text to HTML and FDX (Final Draft).
 
 Textplay has been rigorously tested against fountain documents, but
 it is not perfect, if you encounter a problem please open a github
@@ -231,44 +230,19 @@ For more details see the Fountain documentation
 
 # Some of this is redundant but I prefer specifying every contingency in case I need to control each step
 
-# if there's a 2nd argument (output path)
-if ARGV[1]
-
-  # read the first argument as an input file
-  if RUBY_VERSION > "1.8.7"
-      text = File.read(ARGV[0], :encoding => "UTF-8")
-  else
-      text = File.read(ARGV[0])
-  end
-
-# if there's only 1 argument (an input path)
-elsif ARGV[0]
-
-  # read the first argument as an input file
-  if RUBY_VERSION > "1.8.7"
-      text = File.read(ARGV[0], :encoding => "UTF-8")
-  else
-      text = File.read(ARGV[0])
-  end
-
-# if no input and no output
+# check to see if anything is in SDTIN
+if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
+  # if so, read it
+  text = STDIN.read 
 else
-
-  # check to see if anything is in SDTIN
-  if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
-    # if so, read it
-    text = STDIN.read 
+  # if nothing is check for --help and send help text to less
+  if options[:help] == true
+    IO.popen("less", "w") { |f| f.puts help_text }
   else
-    # if nothing is check for --help and send help text to less
-    if options[:help] == true
-      IO.popen("less", "w") { |f| f.puts help_text }
-    else
-      # otherwise display the option banner
-      puts optparse
-    end
-    exit(-1)
+    # otherwise display the option banner
+    puts optparse
   end
-
+  exit(-1)
 end
 
 
@@ -1019,80 +993,26 @@ end
 
 # NOTE: PHASE 6 - Output
 
-# If an output file is specified then dump preformatted and converted
-# text to that file.
-if ARGV[1]
-	# create a new file at the path supplied by the user
-	newFile = File.new(ARGV[1], "w+")
-	# if FDX, then do this
-	if options[:fdx] == true
-		newFile.puts fdxStart
-		newFile.puts text
-		newFile.puts fdxEnd
-	# if PDF, then do this
-	elsif options[:pdf] == true
-		# create a new temp file for processing
-		File.open('/tmp/textplay.html', "w+") do |htmlFile|
-		# place the transformed text in the new file
-		htmlFile.puts htmlStart
-		htmlFile.puts text
-		htmlFile.puts htmlEnd
-		  end
-		# run prince
-		system "prince /tmp/textplay.html #{ARGV[1]}"
-	elsif options[:xml] == true
-    # output xml if requested
-		if options[:snippet] == false
-		newFile.puts xmlStart
-		end
-		newFile.puts text
-		if options[:snippet] == false
-		newFile.puts xmlEnd
-		end
-	else
-    # otherwise fallback to HTML
-		if options[:snippet] == false
-		newFile.puts htmlStart
-		end
-		newFile.puts text
-		if options[:snippet] == false
-		newFile.puts htmlEnd
-		end
-	end
+if options[:fdx] == true
+  puts fdxStart
+  puts text
+  puts fdxEnd
+elsif options[:xml] == true
+# output xml if requested
+  if options[:snippet] == false
+  puts xmlStart
+  end
+  puts text
+  if options[:snippet] == false
+  puts xmlEnd
+  end
 else
-# If no output file is specified then pass the output to STDOUT.
-	if options[:fdx] == true
-		puts fdxStart
-		puts text
-		puts fdxEnd
-	# in the case of a PDF, create a file in the /tmp dir and open it directly from there
-	elsif options[:pdf] == true
-		# create a new temp file for processing
-		File.open('/tmp/textplay.html', "w+") do |htmlFile|
-		# place the transformed text in the new file
-		htmlFile.puts htmlStart
-		htmlFile.puts text
-		htmlFile.puts htmlEnd
-			end
-		# run prince on that new file
-		system "prince /tmp/textplay.html; open /tmp/textplay.pdf"
-	elsif options[:xml] == true
-    # output xml if requested
-		if options[:snippet] == false
-		puts xmlStart
-		end
-        puts text
-        if options[:snippet] == false
-        puts xmlEnd
-        end
-	else
-    # otherwise fallback to HTML
-		if options[:snippet] == false
-		puts htmlStart
-		end
-		puts text
-		if options[:snippet] == false
-		puts htmlEnd
-		end
-	end
+# otherwise fallback to HTML
+  if options[:snippet] == false
+  puts htmlStart
+  end
+  puts text
+  if options[:snippet] == false
+  puts htmlEnd
+  end
 end
