@@ -766,13 +766,13 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
-text = text.gsub(/^[ \t]*#+[ \t]*(.*)/,'<note>\1</note>')
-text = text.gsub(/^[ \t]*=[ \t]*(.*)/,'<note>\1</note>')
+text = text.gsub(/^[ \t]*#+[ \t]*(.*)/, "\n" + '<note>\1</note>' + "\n")
+text = text.gsub(/^[ \t]*=[ \t]*(.*)/, "\n" + '<note>\1</note>' + "\n")
 # these need not be completely removed simply because they do not span multiple lines
 
 if screenbundle_comments == "on"
   # Textplay/Screenbundle comments
-  text = text.gsub(/^[ \t]*\/\/\s?(.*)$/, '<note>\1</note>')  
+  text = text.gsub(/^[ \t]*\/\/\s?(.*)$/,  "\n" + '<note>\1</note>' + "\n")  
 end
 
 # -------- Transitions
@@ -929,6 +929,9 @@ text = text.gsub(/<action>(.|\n)+?<\/action>/x){|tabs|
 	tabs.gsub(/\t/, '    ')
 }
 
+# cleanup extra newlines around notes
+text = text.gsub(/^\n\n(<note>)/, '\1')
+text = text.gsub(/(<\/note>\n\n)\n/, '\1')
 
 
 # NOTE: PHASE 5 - Convert XML to requested format
