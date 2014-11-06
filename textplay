@@ -807,6 +807,10 @@ text = text.gsub(/
 
 # ------- Dialogue
 
+# The 2 search/replaces below, Standard and Escaped dialogue blocks,
+# wrap the entire dialogue block in a wrapper. This allows much simpler
+# regular expressions inside those blocks. 
+
 # ESCAPED DIALOGUE BLOCKS
 text = text.gsub(/
 # Require preceding empty line
@@ -815,8 +819,8 @@ text = text.gsub(/
 ^\@(.+)\n
 # Dialogue
 (^[\ \t]* .+ \n)+
-# Require trailing empty line
-^[\ \t]*$
+# Require trailing empty line or end of document
+(^[\ \t]*$|\Z)
 /x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
 
 
@@ -828,16 +832,16 @@ text = text.gsub(/
 ^[\ \t]*[^a-z\n\t]+(\ *\(.+\))?\n
 # Dialogue
 (^[\ \t]* .+ \n)+
-# Require trailing empty line
-^[\ \t]*$
+# Require trailing empty line or end of document
+(^[\ \t]*$|\Z)
 /x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
 
+# Now that they're wrapped, tag the individual elements
 
 # SEARCH THE DIALOGUE-BLOCK FOR ESCAPED CHARACTERS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
     character.gsub(/(<dialogue>\n)[\ \t]*\@(.+)(?=\n)/, '\1<character>\2</character>')
 }
-
 
 # SEARCH THE DIALOGUE-BLOCK FOR CHARACTERS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
@@ -894,6 +898,8 @@ if goldman_sluglines == "on"
   (?i:^\A | ^[\ \t]* \n)
   # Any line with all-uppercase
   ^[ \t]*(?=\S)([^a-z\<\>\n]+)$
+  # Require trailing empty line
+  ^[\ \t]* \n
   /x, "\n"+'<slug>\1</slug>')
 end
 
