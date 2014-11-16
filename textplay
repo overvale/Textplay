@@ -107,27 +107,25 @@ optparse.parse!
 help_text = "
 TEXTPLAY
 
-Usage: textplay [options]
+    textplay [options]
 
-Texplay is designed to be a Unix tool, thus it always reads from
-STDIN and writes to STDOUT. To make a file use standard Unix
-redirection. For example:
-
-    textplay < screenplay.fountain > screenplay.html
-
-As another example, textplay has been tested extensively with 
-PrinceXML (http://princexml.com). To make a PDF from a fountain
-document, use this:
-
-    cat screenplay.fountain | textplay | prince - screenplay.pdf
-
-By default textplay converts to a fully-formed HTML document.
-
-Options:
     -h, --help        Display the help text
     -s, --snippet     Do not include document headers/footers
     -f, --fdx         Convert to Final Draft .fdx
     -x, --xml         Output as the internal raw XML
+
+By default textplay converts to a fully-formed HTML document.
+
+Texplay is designed to be a Unix tool, thus it always reads from STDIN and
+writes to STDOUT. To make a file use standard Unix redirection. For example:
+
+    textplay < screenplay.fountain > screenplay.html
+
+As another example, textplay has been tested extensively with
+[PrinceXML](http://princexml.com). To make a PDF from a fountain document,
+use this:
+
+    textplay < screenplay.fountain | prince - screenplay.pdf
 
 
 ABOUT TEXTPLAY
