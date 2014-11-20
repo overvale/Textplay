@@ -734,6 +734,9 @@ xmlEnd = '</root>'
 
 # NOTE: PHASE 4 - Convert input to XML
 
+# Remove any DOS-style line endings:
+text = text.gsub(/\r\n/, "\n")
+
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
