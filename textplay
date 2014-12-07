@@ -5,11 +5,11 @@
 # Copyright (c) 2006 Oliver Taylor
 # <http://olivertaylor.net/textplay/>
 #
-# Textplay was built using Mac OS 10.6-9 and Ruby 1.8-2.0. I have only
+# Textplay was built using Mac OS 10.6-10 and Ruby 1.8-2.0. I have only
 # tested it in this environment, if you want to run Textplay in another
 # environment (such as Windows) you may have to modify the code.
 # 
-# TEXTPLAY LICENCE
+# TEXTPLAY LICENSE
 #
 # Textplay is free software, available under a BSD-style
 # open source license.
@@ -22,15 +22,15 @@
 # met:
 #
 # * Redistributions of source code must retain the above copyright
-# notice, this list of conditions and the following disclaimer.
+#   notice, this list of conditions and the following disclaimer.
 #
 # * Redistributions in binary form must reproduce the above copyright
-# notice, this list of conditions and the following disclaimer in the
-# documentation and/or other materials provided with the distribution.
+#   notice, this list of conditions and the following disclaimer in the
+#   documentation and/or other materials provided with the distribution.
 #
 # * Neither the name "Textplay" nor the names of its
-# contributors may be used to endorse or promote products derived from
-# this software without specific prior written permission.
+#   contributors may be used to endorse or promote products derived from
+#   this software without specific prior written permission.
 #
 # This software is provided by the copyright holders and contributors
 # "as is" and any express or implied warranties, including, but not
@@ -72,7 +72,9 @@ options = {}
 optparse = OptionParser.new do|opts|
 
 	# This is the help banner, which just explains the command syntax
-	opts.banner = "Usage: textplay [options] (use Unix redirects to create files)"
+	opts.banner = "
+Usage: textplay [options]
+       textplay reads from STDIN and writes to STDOUT."
 
 	# Help text
 	options[:help] = false
@@ -98,6 +100,12 @@ optparse = OptionParser.new do|opts|
 		options[:xml] = true
 	end
 
+	# if the '-d' option is set trigger diff mode
+	options[:diff] = false
+	opts.on( '-d', '--diff', "Assume input is a diff" ) do
+		options[:diff] = true
+	end
+
 end
 
 # Parse the options and remove them from ARGV
@@ -113,6 +121,7 @@ TEXTPLAY
     -s, --snippet     Do not include document headers/footers
     -f, --fdx         Convert to Final Draft .fdx
     -x, --xml         Output as the internal raw XML
+    -d, --diff        Assume input is a diff, generate revision marks
 
 By default textplay converts to a fully-formed HTML document.
 
@@ -137,6 +146,36 @@ formatted plain-text to HTML and FDX (Final Draft).
 Textplay has been rigorously tested against fountain documents, but
 it is not perfect, if you encounter a problem please open a github
 issue: <https://github.com/olivertaylor/Textplay/issues>
+
+
+USING DIFFS TO GENERATE REVISION MARKS
+
+textplay is capable of converting diffs of fountain documents into screenplays
+with revision marks.
+
+You'll need to ensure the entire screenplay is included in the diff. By
+default `diff` only includes, in the output, 3 lines of context around the
+changes it detects. This can be changed with the `--unified` option. Like
+this:
+
+   $ diff --unified=999999 a.txt b.txt
+   $ git-diff --unified=999999 <commit> <commit> a.txt
+
+Unless your screenplay is over a million lines long,
+this amount of context should suffice.
+
+It is advisable, because of the way textplay handles whitespace,
+to use `diff` with the following options:
+
+    -E       Ignore changes due to tab expansion.
+    -B       Ignore changes whose lines are all blank.
+
+Just to be thorough about it, here is a complete command which would generate
+an HTML screenplay with revision marks:
+
+   $ diff -EB --unified=999999 a.txt b.txt | textplay -d
+
+See git-diff's man page for relevant equivalents.
 
 
 CONFIGURING TEXTPLAY
@@ -244,16 +283,39 @@ else
 end
 
 
+
+# ---------------------------------
+# TEMPORARY CHECKING FOR FDX/DIFF
+if options[:diff] == true and options[:fdx] == true
+        puts "Converting diffs to FDX is not supported yet."
+else
+# ---------------------------------
+
+
+
+
+
 # NOTE: PHASE 2 - Set title-page and meta info
 
+# Before we do anything else, we must deal with diff markers and the meta blocks.
+if options[:diff] == true
+    # Remove diff header so the meta-tag detection doesn't get confused
+    text = text.gsub(/^\-{3}.*\n\+{3}.*\n@@.*\n/, '')
+    # Lines in meta-blocks that have been deleted should be immediately removed.
+    # There's no need to mark them as revised since they're non-printing.
+    # And deleted meta-tags should be removed before they're marked as meta-tags.
+    text = text.gsub(/^-(?!-).*\n/, '')
+    # Also remove additions of empty lines, so the meta-tagging stays sane
+    text = text.gsub(/^\+\s*$/, '')
+end
+
 # If the first thing in the document (aside from comments) is a
-# key-value pair, then enable tagging of the meta block
+# key-value pair, then enable tagging of the meta block.
 
 # returns the fist non-comment line
-l1_test = /^(?! *(#|=|\|\[\[|\/\*)).+/.match(text)
+l1_test = /^(?! *(#|=|\|\[\[|\/\*|\*\/)).+/.match(text)
 # convert match to string
 l1_test = l1_test[0]
-
 # if the first line looks like a meta-block, set the "meta" variable
 if l1_test =~ /: */
   meta = true
@@ -267,24 +329,24 @@ end
 
 multi_key = /
   # Cannot begin with spaces (that's a value)
-  ^(?!\ )
+  ^\+?(?!\ )
   # the key itself
   [\S\ ]+:\ *\n
   # the indented value - multiple lines allowed
-  ((\ {3,}|\t).+\n?)+
+  (\+?(\ {3,}|\t).+\n?)+
   # a single empty line is allowed - 2 empty lines ends the meta_block
-  (^\ *\n){0,1}
+  (^\+?\ *\n){0,1}
 /x
 
 single_key = /
   # Cannot begin with spaces (that's a value)
-  ^(?!\ )
+  ^\+?(?!\ )
   # the key
   ([\S\ ]+):\ *
   # the value
   ([^\n]+)\n
   # a single empty line is allowed - 2 empty lines ends the meta_block
-  (^\ *\n){0,1}
+  (^\+?\ *\n){0,1}
 /x
 
 # -------------------------
@@ -299,6 +361,14 @@ if meta == true
   # everything in the document that looks like meta tags - not a
   # great idea.
   text = text.sub(/(#{multi_key}|#{single_key})+/,'<meta_block>'+"\n"+'\0'+'</meta_block>'+"\n\n")
+
+  if options[:diff] == true
+      # remove the diff markers so they don't confuse anything
+      text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/){|tags|
+        tags.gsub(/^\+/, '')
+      }
+
+  end
 
   # Identify multi-line key-value pairs...
 
@@ -315,11 +385,6 @@ if meta == true
   # search inside meta-tags for values
   text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
     tags.gsub(/( {3,}|\t)(.+)/, '<value>\2</value>')
-  }
-
-  # clean-up multi-line values
-  text = text.gsub(/<meta_multi>(.|\n)+?<\/meta_multi>/){|tags|
-    tags.gsub(/<\/value>\n<value>/, "\n")
   }
 
   # remove empty lines
@@ -439,20 +504,6 @@ if wrap_paragraphs == "on"
 else
   wrap_paragraphs = "pre-wrap"
 end
-
-# for debugging
-
-# print "title: #{title}\n"
-# print "goldman_sluglines: #{goldman_sluglines}\n"
-# print "screenbundle_comments: #{screenbundle_comments}\n"
-# print "bold_sluglines: #{bold_sluglines}\n"
-# print "underlined_sluglines: #{underlined_sluglines}\n"
-# print "font: #{font}\n"
-# print "slugline_spacing: #{slugline_spacing}\n"
-# print "wrap_paragraphs: #{wrap_paragraphs}\n"
-# print "header: #{header}\n"
-# print "footer: #{footer}\n"
-# print "\n\n" + text
 
 # -------------------------
 
@@ -697,8 +748,7 @@ text-decoration:underline;
 display:none
 }
 
-.revised {border-right:.5em solid #aaa;}
-
+.revised { background:rgba(255, 255, 0, 0.2); }
 
 </style>
 </head>
@@ -734,8 +784,37 @@ xmlEnd = '</root>'
 
 # NOTE: PHASE 4 - Convert input to XML
 
+# Start by completely removing bonyard comments and notes. It is impossible to
+# prevent additional transformations inside them when newlines are present.
+# They must also be removed so they don't interfere with the transformation
+# of adjacent elements.
+
+# Boneyard
+text = text.gsub(/\/\*(.|\n)+?\*\//, '')
+
+# Fountain [[notes]]
+text = text.gsub(/\[{2}[^\]]+\]{2}/,'')
+
+# Unfortunately, when you add a note/comment to a line, but don't otherwise
+# change it, textplay will still mark the line as revised because `diff` marks
+# those lines as revised before textplay even gets to work.
+# To properly avoid this textplay would have to remove notes/comments
+# BEFORE `diff` compares the files - which is more trouble than its worth.
+
+
+# Convert the diff formatting to something textplay can parse into XML
+if options[:diff] == true
+    # Now that notes/comments have been removed, remove diff-added empty lines
+    text = text.gsub(/^\+\s*$/, '')
+    # Mark revised lines
+    text = text.gsub(/^\+(?!\+)([^\n]+)(\n?)/, '\1' + "{{%}}" + '\2')
+    # Remove space in front of unchanged lines
+    text = text.gsub(/^ (.*\n)/, '\1')
+end
+
+
 # Misc Encoding
-text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*$/, '<page-break />')
+text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*({{%}})?$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
 text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 text = text.gsub(/^[ \t]+$/, '')
@@ -745,20 +824,8 @@ text = text.gsub(/^[ \t]+$/, '')
 # Action escape
 text = text.gsub(/^\!(.+)/, '<action>\1</action>')
 
-# Boneyard
-text = text.gsub(/\/\*(.|\n)+?\*\//, '')
-
-# Fountain [[notes]]
-text = text.gsub(/\[{2}[^\]]+\]{2}/,'')
-
-# Boneyards and Notes are completely removed from the text because it is
-# impossible to prevent additional transformations inside them when newlines
-# are present, and so they don't interfere with the transformation of adjacent
-# elements. And since Fountain is an archival-format, there's no need to maintain
-# notes across conversions (retaining notes in FDX being an exception).
-
 # Fountain Rules
-text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*$/, '<center>\1</center>')
+text = text.gsub(/^[\ \t]*>[ ]*(.+?)[ ]*<[\ \t]*({{%}})?$/, '<center>\1\2</center>')
 text = text.gsub(/^[\ \t]*\>[ \t]*(.*)$/,'<transition>\1</transition>')
 text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
@@ -773,6 +840,10 @@ if screenbundle_comments == "on"
   text = text.gsub(/^[ \t]*\/\/\s?(.*)$/,  "\n" + '<note>\1</note>' + "\n")  
 end
 
+# And since Sections, Synopses, and Screenbundle  are non-printing,
+# remove any included revision marks
+text = text.gsub(/({{%}})?(<\/note>)/,'\2')
+
 # -------- Transitions
 # Left-Transitions
 text = text.gsub(/
@@ -783,7 +854,9 @@ text = text.gsub(/
   # One of these words
   (UP|IN|OUT|BLACK|WITH)  (\ ON)?
   # Ending with transition punctuation
-  ([\.\:][\ ]*)    )\n
+  ([\.\:][\ ]*)
+  # and optional revision marker
+  ({{%}})?  )\n
   # trailing empty line
   ^[\ \t]*$
 /x, "\n"+'<transition>\2</transition>'+"\n")
@@ -796,8 +869,8 @@ text = text.gsub(/
   ^[\ \t]* (  \w+(?:\ \w+)* [\ ]
 # The word "TO"
   (TO)
-# Ending in a colon
-  (\:)$)\n
+# Ending in a colon, optional revision mark
+  (\:)  ({{%}})?  $)\n
   # trailing empty line
   ^[\ \t]*$
 /x, "\n"+'<transition>\2</transition>'+"\n")
@@ -822,12 +895,14 @@ text = text.gsub(/
 /x, "\n"+'<dialogue>'+'\0'+'</dialogue>'+"\n")
 
 
-# STANDARD DIALOGUE-BLOCKS
+# NON-ESCAPED DIALOGUE-BLOCKS
 text = text.gsub(/
 # Require preceding empty line
 ^[\ \t]* \n
-# Character Name
-^[\ \t]*[^a-z\n\t]+(\ *\(.+\))?\n
+# Character Name + (Note)
+^[\ \t]*[^a-z\n\t]+(\ *\(.+\))?
+# Optional revision marker
+({{%}})?\n
 # Dialogue
 (^[\ \t]* .+ \n)+
 # Require trailing empty line or end of document
@@ -841,14 +916,27 @@ text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
     character.gsub(/(<dialogue>\n)[\ \t]*\@(.+)(?=\n)/, '\1<character>\2</character>')
 }
 
-# SEARCH THE DIALOGUE-BLOCK FOR CHARACTERS
+# SEARCH THE DIALOGUE-BLOCK FOR NON-ESCAPED CHARACTERS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|character|
-    character.gsub(/(<dialogue>\n)[\ \t]*([^a-z\n\t]+(\ *\(.+\))?)(?=\n)/, '\1<character>\2</character>')
+    character.gsub(/
+      # beginning tag
+      (<dialogue>\n)
+      # Optional indentation
+      [\ \t]*
+      # The all-uppercase character name
+      ([^a-z\n\t]+
+      # Optional (note), case ignored
+      (\ *\(.+\))?)
+      # Optional revision marker
+      ({{%}})?
+      # with a newline ahead of it
+      (?=\n)
+      /x, '\1<character>\2\4</character>')
 }
 
 # SEARCH THE DIALOGUE-BLOCK FOR PARENTHETICALS
 text = text.gsub(/<dialogue>\n(.|\n)+?<\/dialogue>/x){|paren|
-    paren.gsub(/^[ \t]*(\([^\)]+\))[ \t]*(?=\n)/, '<paren>\1</paren>')
+    paren.gsub(/^[ \t]*(\([^\)]+\))[ \t]*({{%}})?(?=\n)/, '<paren>\1\2</paren>')
 }
 
 # SEARCH THE DIALOGUE-BLOCK FOR DIALOGUE
@@ -863,8 +951,9 @@ text = text.gsub(/(<talk>)~(.+)(<\/talk>)/, '\1<lyric>\2</lyric>\3')
 # Dual Dialogue Blocks
 # --------------------
 
-# mark dual-dialogue blocks with a <join-marker>
-text = text.gsub(/^\n(<dialogue>\n<character>.+?)( +\^)(<\/character>)/, '<join-marker>' + "\n" + '\1\3')
+# Add a "join-marker" above the second character
+# in a block of dual dialogue. The one with a fountain '^'
+text = text.gsub(/^\n(<dialogue>\n<character>.+?)( +\^)({{%}})?(<\/character>)/, '<join-marker>' + "\n" + '\1\3\4')
 
 # wrap dual dialogue in wrapper
 text = text.gsub(/\n\n(<dialogue>\n(?:(?:.+\n)+))(<join-marker>)((?:\n.+)+)/, "\n\n" + '<wrap>' + "\n" + '\1\2\3' "\n" + '</wrap>')
@@ -895,10 +984,10 @@ if goldman_sluglines == "on"
   # Require leading empty line - or the beginning of file
   (?i:^\A | ^[\ \t]* \n)
   # Any line with all-uppercase
-  ^[ \t]*(?=\S)([^a-z\<\>\n]+)$
+  ^[ \t]*(?=\S)([^a-z\<\>\n]+)\n
   # Require trailing empty line
   ^[\ \t]* \n
-  /x, "\n"+'<slug>\1</slug>')
+  /x, "\n"+'<slug>\1</slug>'+"\n\n")
 end
 
 # ------- Misc
@@ -932,6 +1021,21 @@ text = text.gsub(/^\n\n(<note>)/, '\1')
 text = text.gsub(/(<\/note>\n\n)\n/, '\1')
 
 
+# Next up, convert the revision markers {{%}}
+# into xml markup.
+if options[:diff] == true
+    # search for {{%}} inside XML tags and replace with markup
+    text = text.gsub(/
+        # first, find the XML tags
+        (<(transition|sceneheading|slug|center|dialogue|character|paren|talk|action)>)
+        # Then the content + revision marker
+        (.+) {{%}}
+        # with a matching end-tag
+        (<\/\2>)
+    /x, '\1<revised>\3</revised>\4')
+end
+
+
 # NOTE: PHASE 5 - Convert XML to requested format
 
 # And here we markup the text according to the set options
@@ -939,7 +1043,6 @@ text = text.gsub(/(<\/note>\n\n)\n/, '\1')
 # Final Draft formatting
 if options[:fdx] == true
   text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '')
-  text = text.gsub(/<secret \/>/, '')
   text = text.gsub(/<note>/, '<Paragraph><ScriptNote><Text>')
   text = text.gsub(/<\/note>/, '</Text></ScriptNote></Paragraph>')
   text = text.gsub(/<b>/, '<Text Style="Bold">')
@@ -971,7 +1074,6 @@ else
   text = text.gsub(/<note>/, '<p class="comment">')
   text = text.gsub(/<\/note>/, '</p>')
   text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '<!--\0-->')
-  text = text.gsub(/<secret \/>/, '')
   text = text.gsub(/<page-break \/>/, '<div class="page-break"></div>')
   text = text.gsub(/<transition>/, '<h3 class="right-transition">')
   text = text.gsub(/<\/transition>/, '</h3>')
@@ -995,6 +1097,8 @@ else
   text = text.gsub(/<\/lyric>/, '</span>')
   text = text.gsub(/<action>/, '<p class="action">')
   text = text.gsub(/<\/action>/, '</p>')
+  text = text.gsub(/<revised>/, '<span class="revised">')
+  text = text.gsub(/<\/revised>/, '</span>')
 end
 
 
@@ -1023,3 +1127,9 @@ else
   puts htmlEnd
   end
 end
+
+
+# ---------------------------------
+# TEMPORARY CHECKING FOR FDX/DIFF
+end
+# ---------------------------------
