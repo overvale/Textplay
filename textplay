@@ -784,6 +784,9 @@ xmlEnd = '</root>'
 
 # NOTE: PHASE 4 - Convert input to XML
 
+# Remove any DOS-style line endings:
+text = text.gsub(/\r\n/, "\n")
+
 # Start by completely removing bonyard comments and notes. It is impossible to
 # prevent additional transformations inside them when newlines are present.
 # They must also be removed so they don't interfere with the transformation
@@ -811,7 +814,6 @@ if options[:diff] == true
     # Remove space in front of unchanged lines
     text = text.gsub(/^ (.*\n)/, '\1')
 end
-
 
 # Misc Encoding
 text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*({{%}})?$/, '<page-break />')
