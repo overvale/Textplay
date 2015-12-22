@@ -106,6 +106,12 @@ Usage: textplay [options]
 		options[:diff] = true
 	end
 
+	# if the '-w' option is set wrap paragraphs
+	options[:wrap] = false
+	opts.on( '-w', '--wrap', "Wrap action and dialogue paragraphs" ) do
+		options[:wrap] = true
+	end
+
 end
 
 # Parse the options and remove them from ARGV
@@ -122,6 +128,7 @@ TEXTPLAY
     -f, --fdx         Convert to Final Draft .fdx
     -x, --xml         Output as the internal raw XML
     -d, --diff        Assume input is a diff, generate revision marks
+    -w, --wrap        Wrap action and dialogue paragraphs
 
 By default textplay converts to a fully-formed HTML document.
 
@@ -224,6 +231,8 @@ be customized:
       to wrap your action paragraphs, turn this option on. This option is
       particularly useful if your screenplay is under version control and
       you follow this advice: <http://rhodesmill.org/brandon/2012/one-sentence-per-line/>
+
+      This option can also be set via a command-line flag.
 
     * header (text) -- empty by default
 
@@ -471,8 +480,13 @@ if slugline_spacing == nil or slugline_spacing == ""
 slugline_spacing = "1"
 end
 
-if wrap_paragraphs == nil or wrap_paragraphs == ""
-wrap_paragraphs = "off"
+# the command-line flag overrides the in-document setting
+if options[:wrap] == true
+    wrap_paragraphs = "on"
+else
+    if wrap_paragraphs == nil or wrap_paragraphs == ""
+    wrap_paragraphs = "off"
+    end
 end
 
 if header == nil or header == ""
@@ -649,7 +663,7 @@ margin-left: 1in;
 width: 3.5in;
 padding-right:1.75in;
 line-height: inherit;
-white-space: pre-wrap;
+white-space: #{wrap_paragraphs};
 }
 
 /* Dual-Dialogue-blocks */
