@@ -553,7 +553,7 @@ prince-page-group: start;
 @page Screenplay {
 /* Page Numbers */
 @top-right-corner {
-font: 12pt \"#{font}\", courier;
+font: 12pt \"#{font}\", courier, monospace;
 content: counter(page)\".\";
 vertical-align: bottom;
 padding-bottom: 1em;
@@ -613,8 +613,12 @@ prince-bookmark-level: none;
 
 /* ---------- COMMON LAYOUT ---------- */
 
+:lang(jp) {
+font-family: osaka;
+}
+
 body {
-font-family: \"#{font}\", courier;
+font-family: \"#{font}\", courier, monospace;
 font-size: 12pt;
 line-height: 1;
 }
@@ -1017,7 +1021,8 @@ text = text.gsub(/([ \t\-_:;>])\*{2}([^\*\n]+)\*{2}(?=[ \t\)\]<\-_&;:?!.,])/, '\
 text = text.gsub(/([ \t\-_:;>])\*{1}([^\*\n]+)\*{1}(?=[ \t\)\]<\-_&;:?!.,])/, '\1<i>\2</i>')
 text = text.gsub(/([ \t\-\*:;>])\_{1}([^\_\n]+)\_{1}(?=[ \t\)\]<\-\*&;:?!.,])/, '\1<u>\2</u>')
 
-
+# ------- Japanese Characters
+text = text.gsub(/[\u4e00-\u9faf]+/x, '<span lang="jp">\0</span>')
 
 # ---------- Cleanup
 
