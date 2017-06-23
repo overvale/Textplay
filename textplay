@@ -1,68 +1,25 @@
 #!/usr/bin/ruby
 
-# Textplay -- A plain-text conversion tool for screenwriters
-#
-# Copyright (c) 2006 Oliver Taylor
-# <http://olivertaylor.net/textplay/>
-#
-# Textplay was built using Mac OS 10.6-10 and Ruby 1.8-2.0. I have only
-# tested it in this environment, if you want to run Textplay in another
-# environment (such as Windows) you may have to modify the code.
-# 
-# TEXTPLAY LICENSE
-#
-# Textplay is free software, available under a BSD-style
-# open source license.
-#
-# Copyright 2006, Oliver Taylor http://olivertaylor.net/ All rights
-# reserved.
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are
-# met:
-#
-# * Redistributions of source code must retain the above copyright
-#   notice, this list of conditions and the following disclaimer.
-#
-# * Redistributions in binary form must reproduce the above copyright
-#   notice, this list of conditions and the following disclaimer in the
-#   documentation and/or other materials provided with the distribution.
-#
-# * Neither the name "Textplay" nor the names of its
-#   contributors may be used to endorse or promote products derived from
-#   this software without specific prior written permission.
-#
-# This software is provided by the copyright holders and contributors
-# "as is" and any express or implied warranties, including, but not
-# limited to, the implied warranties of merchantability and fitness for
-# a particular purpose are disclaimed. In no event shall the copyright
-# owner or contributors be liable for any direct, indirect, incidental,
-# special, exemplary, or consequential damages (including, but not
-# limited to, procurement of substitute goods or services; loss of use,
-# data, or profits; or business interruption) however caused and on any
-# theory of liability, whether in contract, strict liability, or tort
-# (including negligence or otherwise) arising in any way out of the use
-# of this software, even if advised of the possibility of such damage.
-#
-# ---------------------------------------------------------------------
+# TEXTPLAY -- A plain-text conversion tool for screenwriters
 
-# HOW TEXTPLAY WORKS
-# 
 # This script works on your text in 5 phases:
 # 
-# Phase 1 allows the user to define conversion options on the command-line.
-# Phase 2 looks for something that looks like fountain title pages,
-#         and sets variables based on key/value pairs
-# Phase 3 defines header and footer values for HTML and FDX conversion.
-#         These blocks of text will be wrapped-around the transformed text
-#         when the output file is generated.
-# Phase 4 converts the input text to an internal xml markup in preparation for
-#         further transformation.
-# Phase 5 converts the internal xml markup to the markup requested by the user.
-# Phase 6 dumps the result to STDOUT.
+# Phase 1 - Allows the user to define conversion options on the command-line.
+# Phase 2 - Looks for something that looks like fountain title pages,
+#           and sets variables based on key/value pairs
+# Phase 3 - Defines header and footer values for HTML and FDX conversion.
+#           These blocks of text will be wrapped-around the transformed text
+#           when the output file is generated.
+# Phase 4 - Converts the input text to an internal xml markup in preparation for
+#           further transformation.
+# Phase 5 - Converts the internal xml markup to the markup requested by the user.
+# Phase 6 - Dumps the result to STDOUT.
+
 
 
 # NOTE: PHASE 1 - Options
+# -----------------------------------------------------------------------------
+
 
 require 'optparse'
 require 'fcntl'
@@ -305,6 +262,8 @@ else
 
 
 # NOTE: PHASE 2 - Set title-page and meta info
+# -----------------------------------------------------------------------------
+
 
 # Before we do anything else, we must deal with diff markers and the meta blocks.
 if options[:diff] == true
@@ -522,7 +481,11 @@ end
 # -------------------------
 
 
+
+
 # NOTE: PHASE 3 - Set HTML, XML, etc. header and footers
+# -----------------------------------------------------------------------------
+
 
 # HTML page structure and CSS
 htmlStart = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\"
@@ -800,7 +763,11 @@ xmlStart = '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 xmlEnd = '</root>'
 
 
+
+
 # NOTE: PHASE 4 - Convert input to XML
+# -----------------------------------------------------------------------------
+
 
 # Remove any DOS-style line endings:
 text = text.gsub(/\r\n/, "\n")
@@ -1057,7 +1024,11 @@ if options[:diff] == true
 end
 
 
+
+
 # NOTE: PHASE 5 - Convert XML to requested format
+# -----------------------------------------------------------------------------
+
 
 # And here we markup the text according to the set options
 
@@ -1123,7 +1094,11 @@ else
 end
 
 
+
+
 # NOTE: PHASE 6 - Output
+# -----------------------------------------------------------------------------
+
 
 if options[:fdx] == true
   puts fdxStart
