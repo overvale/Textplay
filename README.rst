@@ -1,6 +1,9 @@
 Textplay
 ========
 
+- [ ] Directly create PDF's from  Fountain Files.
+- [ ] Create gitflow like screenplay flow where friends can edit/feedback on versions
+
 Textplay is a simple command-line script that converts screenplays
 written in Fountain_ formatted plain-text to HTML, XML, and FDX (`Final Draft`_).
 
@@ -105,5 +108,3 @@ Support for the Fountain Format
 .. _`Final Draft`: http://finaldraft.com
 .. _`github issue`: https://github.com/olivertaylor/Textplay/issues?state=open
 .. _`PrinceXML`: http://princexml.com
-
-
