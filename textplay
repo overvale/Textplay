@@ -233,19 +233,24 @@ For more details see the Fountain documentation
 
 # Some of this is redundant but I prefer specifying every contingency in case I need to control each step
 
-# check to see if anything is in SDTIN
-if STDIN.fcntl(Fcntl::F_GETFL, 0) == 0
-  # if so, read it
-  text = STDIN.read 
+# Check to see if anything is in STDIN
+if STDIN.isatty == TRUE
+
+	# If nothing is there, check for --help
+	if options[:help] == true
+		# and send help text to less
+		IO.popen("less", "w") { |f| f.puts help_text }
+	else
+		# otherwise display the option banner
+		puts optparse	
+	end
+	exit(-1)
+
 else
-  # if nothing is check for --help and send help text to less
-  if options[:help] == true
-    IO.popen("less", "w") { |f| f.puts help_text }
-  else
-    # otherwise display the option banner
-    puts optparse
-  end
-  exit(-1)
+
+	# If there IS content in STDIN, read it
+	text = STDIN.read
+
 end
 
 
