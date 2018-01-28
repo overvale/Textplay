@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<center>Centered</center>
+
+<transition>Not centered</transition>
+
+<center>No space</center>
+
+<center>Lots of Space		</center>
+</root>

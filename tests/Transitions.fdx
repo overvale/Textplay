@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+
+<Paragraph Type="Transition"><Text>CUT TO:</Text></Paragraph>
+
+<Paragraph Type="Transition"><Text>SMASH CUT TO:</Text></Paragraph>
+
+<Paragraph Type="Transition"><Text>FADE TO BLACK.</Text></Paragraph>
+
+<Paragraph Type="Transition"><Text>NOT A STANDARD TRANSITION:</Text></Paragraph>
+
+
+
+<Paragraph Type="Transition"><Text>GO TO:</Text></Paragraph>
+
+<Paragraph Type="Action"><Text>TO:</Text></Paragraph>
+</Content>
+</FinalDraft>

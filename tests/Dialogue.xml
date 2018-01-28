@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<action>ADAM
+I like to write.</action>
+
+<dialogue>
+<character>EVE (O.S.)</character>
+<talk>What kind of writing?</talk>
+</dialogue>
+
+<dialogue>
+<character>ADAM</character>
+<paren>(nervous)</paren>
+<talk>Screenwriting.</talk>
+</dialogue>
+
+<dialogue>
+<character>EVE</character>
+<talk>ME TOO!</talk>
+</dialogue>
+
+<dialogue>
+<character>EVE (cont'd)</character>
+<talk>I think screenwriting is the best.</talk>
+</dialogue>
+
+<dialogue>
+<character>ADAM</character>
+<talk>That's great. 
+I was really worried you wouldn't 
+like screenwriting.</talk>
+</dialogue>
+
+<dialogue>
+<character>EVE</character>
+<talk>Oh, Adam.</talk>
+<paren>(kissing him)</paren>
+</dialogue>
+
+<wrap>
+<dialogue class="dual first">
+<character>ADAM</character>
+<talk>I love you.</talk>
+</dialogue>
+<dialogue class="dual second">
+<character>EVE</character>
+<talk>You're so stupid.</talk>
+</dialogue>
+</wrap>
+
+<dialogue>
+<character>R2D2</character>
+<talk>Bleep Boop.</talk>
+<paren>(*This is a valid character cue.*)</paren>
+</dialogue>
+
+<dialogue>
+<character>23 (O.S.)</character>
+<talk>Character name must include a letter</talk>
+</dialogue>
+
+<dialogue>
+<character>ADAM</character>
+<talk>That was really weird.
+I can be weird to. Here's
+a space in the dialogue
+block</talk>
+</dialogue>
+
+<action>for absolutely no good
+reason.</action>
+
+<action>        EVE
+      (feeling cocky)
+    Well, then I'll just indent!</action>
+</root>

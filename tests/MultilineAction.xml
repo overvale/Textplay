@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<action>A normal line of action.</action>
+
+<action>This is a multi-line block of Action.
+Made famous by the great
+WALTER HILL
+but used by many other writers.</action>
+
+<action>A normal line of action.</action>
+</root>

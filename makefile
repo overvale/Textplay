@@ -3,3 +3,7 @@ install: textplay
 
 uninstall: textplay
 	rm /usr/local/bin/textplay
+
+.PHONY: tests
+tests:
+	${MAKE} -C tests

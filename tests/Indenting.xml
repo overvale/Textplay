@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+
+<transition>CUT TO:</transition>
+
+<sceneheading>INT. GARAGE - DAY</sceneheading>
+
+<action>BRICK and STEEL get into Mom's PORSCHE, Steel at the wheel.  They pause for a beat, the gravity of the situation catching up with them.</action>
+
+<dialogue>
+<character>BRICK</character>
+<talk>This is everybody we've ever put away.</talk>
+</dialogue>
+
+<dialogue>
+<character>STEEL</character>
+<paren>(starting the engine)</paren>
+<talk>So much for retirement!</talk>
+</dialogue>
+
+<action>They speed off.  To destiny!</action>
+</root>
