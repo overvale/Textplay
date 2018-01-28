@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+
+<transition>CUT TO:</transition>
+
+<transition>SMASH CUT TO:</transition>
+
+<transition>FADE TO BLACK.</transition>
+
+<transition>NOT A STANDARD TRANSITION:</transition>
+
+<meta_block>
+<meta-single><key>CUT TO</key><value> </value></meta-single>
+</meta_block>
+
+<transition>GO TO:</transition>
+
+<action>TO:</action>
+</root>

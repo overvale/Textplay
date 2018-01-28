@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+
+
+
+<Paragraph Type="Transition"><Text>FADE IN:</Text></Paragraph>
+
+<Paragraph Type="Scene Heading"><Text>INT. OFFICE - MORNING</Text></Paragraph>
+
+<Paragraph Type="Action"><Text>A MAN sits alone at his desk.</Text></Paragraph>
+
+
+<Paragraph Type="Character"><Text>MAN (V.O.)</Text></Paragraph>
+<Paragraph Type="Parenthetical"><Text>(passionately)</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>I'm writing.</Text></Paragraph>
+
+
+<Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>
+
+<Paragraph Type="Scene Heading"><Text>ext. house - day</Text></Paragraph>
+
+<Paragraph Type="Action"><Text>Another scene.</Text></Paragraph>
+
+<Paragraph Type="Transition"><Text>Burn to White.</Text></Paragraph>
+
+<Paragraph Type="Action" Alignment="Center"><Text>THE END</Text></Paragraph>
+
+
+<Paragraph><ScriptNote><Text>Synopsis</Text></ScriptNote></Paragraph>
+
+
+<Paragraph><ScriptNote><Text>Section 1</Text></ScriptNote></Paragraph>
+
+<Paragraph Type="Action"><Text>This is in section one.</Text></Paragraph>
+<Paragraph><ScriptNote><Text>Section 1-1</Text></ScriptNote></Paragraph>
+
+<Paragraph Type="Action"><Text>This should be at a higher depth than the previous section.</Text></Paragraph>
+
+<Paragraph Type="Scene Heading"><Text>FORCED SCENE HEADING</Text></Paragraph>
+
+<Paragraph Type="Action"><Text>... Not a forced scene heading</Text></Paragraph>
+
+
+
+<Paragraph Type="Action"><Text>Scott exasperatedly throws down the card on the table and picks up the phone, hitting speed dial #1...</Text></Paragraph>
+
+
+
+<Paragraph Type="Action"><Text>CUT TO: </Text></Paragraph>
+</Content>
+</FinalDraft>

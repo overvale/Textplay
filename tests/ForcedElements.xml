@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<action>BANG
+BANG
+BANG</action>
+
+<dialogue>
+<character>McDUCK</character>
+<talk>I'm vegan.</talk>
+</dialogue>
+
+<action>SINGER
+~These are the songs
+~That I sing.</action>
+</root>

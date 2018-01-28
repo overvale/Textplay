@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>A Screenplay</title>
+<meta name="generator" content="Textplay">
+<style type="text/css" media="all">
+
+/* ---------- PAGE STYLES ---------- */
+
+/* all page margins are maximums */
+@page {
+size: 8.5in 11in;
+margin-top:1in;
+margin-right:1in;
+margin-bottom:.5in;
+margin-left:1.5in;
+}
+/* This makes the page-counter start on the first page of the screenplay */
+div#screenplay {
+counter-reset: page 1;
+page: Screenplay;
+prince-page-group: start;
+}
+@page Screenplay {
+/* Page Numbers */
+@top-right-corner {
+font: 12pt "Courier Prime", courier, monospace;
+content: counter(page)".";
+vertical-align: bottom;
+padding-bottom: 1em;
+}
+/* Define Header */
+@top-left {
+content: "";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align: bottom;
+padding-bottom: 1.3em;
+}
+/* Define Footer */
+@bottom-left {
+content: "";
+font: italic 10pt Georgia;
+color: #888;
+vertical-align:top;
+padding-top:0;
+}
+}
+/* removes the header and page-numbers from the first page */
+@page Screenplay:first {
+@top-right-corner { content: normal; }
+@top-left { content: normal; }
+}
+/* These control where page-breaks can and cannot happen */
+p {
+orphans: 2;
+widows: 2;
+}
+dl {
+page-break-inside:avoid;
+}
+dt, h2, h5 {
+page-break-after: avoid;
+}
+dd.parenthetical {
+orphans: 3;
+widows: 3;
+page-break-before: avoid;
+page-break-after: avoid;
+}
+dd {
+page-break-before:avoid;
+}
+div.page-break {
+page-break-after:always;
+}
+h3 {
+page-break-before: avoid;
+}
+/* by default Prince bookmarks all headings, no thanks */
+h3, h4, h5, h6 {
+prince-bookmark-level: none;
+}
+
+/* ---------- COMMON LAYOUT ---------- */
+
+:lang(jp) {
+font-family: osaka;
+}
+
+body {
+font-family: "Courier Prime", courier, monospace;
+font-size: 12pt;
+line-height: 1;
+}
+#screenplay {
+width: 6in;
+margin:0 auto;
+}
+p.center {
+text-align:center;
+margin-left:0;
+width:100%;
+}
+p {
+margin-top:12pt;
+margin-bottom:12pt;
+margin-left:0;
+padding-right:.25in;
+width:6in;
+white-space: pre-wrap;
+}
+
+/*Character Names*/
+
+dt {
+font-weight:normal;
+margin-top:1em;
+margin-left:2in;
+padding-right:.25in;
+width:4in;
+}
+
+/*Parentheticals*/
+
+dd.parenthetical {
+margin-left:1.6in;
+text-indent:-.12in;
+width: 2in;
+padding-right:2.66in;
+}
+
+/*Dialogue*/
+
+dd {
+margin:0;
+margin-left: 1in;
+width: 3.5in;
+padding-right:1.75in;
+line-height: inherit;
+white-space: pre-wrap;
+}
+
+/* Dual-Dialogue-blocks */
+
+div.dialogue_wrapper {
+overflow:auto;
+width:100%;
+}
+
+dl.dual {
+width:2.9in;
+}
+
+dl.dual dt, dl.dual dd {
+margin-left:0;
+width:2.5in;
+padding-right:.25in;
+}
+
+dl.dual.first {
+float:left;
+margin-top:-12pt;
+}
+
+dl.dual.second {
+margin-right:0;
+margin-left:auto;
+}
+
+dl.dual dt {
+text-align:center;
+}
+
+dl.dual dd.parenthetical {
+width:2.1in;
+margin-left:.32in;
+}
+
+/* Lyrics */
+span.lyric {
+font-style: italic;
+}
+
+span.lyric i {
+font-style: normal;
+}
+
+
+/* Sluglines and Transitions */
+
+h1,h2,h3,h4,h5,h6 {
+font-weight: normal;
+font-size: 12pt;
+margin-top: 1em;
+margin-bottom: 1em;
+padding-right:.25in;
+text-transform:uppercase;
+}
+
+/* Full Sluglines */
+
+h2 {
+width: inherit;
+margin-top: 1em;
+margin-bottom: 12pt;
+margin-left: 0;
+text-decoration: none;
+font-weight: bold;
+}
+
+/* Right Transitions */
+
+h3 {
+margin-left: 4in;
+width: 2in;
+}
+
+/* Left Transitions */
+
+h4 {
+
+}
+
+/* Goldman Sluglines */
+
+h5 {
+margin-top: 1em;
+font-weight: bold;
+text-decoration: none;
+}
+
+span.underline {
+text-decoration:underline;
+}
+.comment {
+display:none
+}
+
+.revised { background:rgba(255, 255, 0, 0.2); }
+
+</style>
+</head>
+<body>
+
+<div id="screenplay">
+
+<h3 class="right-transition">CUT TO:</h3>
+
+<h2 class="full-slugline">INT. GARAGE - DAY</h2>
+
+<p class="action">BRICK and STEEL get into Mom's PORSCHE, Steel at the wheel.  They pause for a beat, the gravity of the situation catching up with them.</p>
+
+<dl>
+<dt class="character">BRICK</dt>
+<dd class="dialogue">This is everybody we've ever put away.</dd>
+</dl>
+
+<dl>
+<dt class="character">STEEL</dt>
+<dd class="parenthetical">(starting the engine)</dd>
+<dd class="dialogue">So much for retirement!</dd>
+</dl>
+
+<p class="action">They speed off.  To destiny!</p>
+
+</div><!-- end screenplay -->
+</body>
+</html>

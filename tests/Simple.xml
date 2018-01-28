@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<meta_block>
+<meta-single><key>Title</key><value>A Simple Script</value></meta-single>
+<meta-single><key>Author</key><value>Nima Yousefi</value></meta-single>
+<meta-single><key>Draft date</key><value>2/1/2012</value></meta-single>
+</meta_block>
+
+
+<transition>FADE IN:</transition>
+
+<sceneheading>INT. OFFICE - MORNING</sceneheading>
+
+<action>A MAN sits alone at his desk.</action>
+
+<dialogue>
+<character>MAN (V.O.)</character>
+<paren>(passionately)</paren>
+<talk>I'm writing.</talk>
+</dialogue>
+
+<page-break />
+
+<sceneheading>ext. house - day</sceneheading>
+
+<action>Another scene.</action>
+
+<transition>Burn to White.</transition>
+
+<center>THE END</center>
+
+
+<note>Synopsis</note>
+
+
+
+
+<heading1>Section 1</heading1>
+
+
+<action>This is in section one.</action>
+
+
+<heading2>Section 1-1</heading2>
+
+
+<action>This should be at a higher depth than the previous section.</action>
+
+<slug>FORCED SCENE HEADING</slug>
+
+<action>... Not a forced scene heading</action>
+
+
+
+<action>Scott exasperatedly throws down the card on the table and picks up the phone, hitting speed dial #1...</action>
+
+
+
+<action>CUT TO: </action>
+</root>

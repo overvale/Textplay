@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+
+<sceneheading>INT. HOUSE - DAY</sceneheading>
+
+<slug>EXT. HOUSE - DAY</slug>
+
+<sceneheading>INT HOUSE DAY</sceneheading>
+
+<slug>EXT HOUSE DAY</slug>
+
+<sceneheading>INT/EXT. HOUSE - DAY</sceneheading>
+
+<slug>INT./EXT. HOUSE - DAY</slug>
+
+<sceneheading>I/E. HOUSE - DAY</sceneheading>
+
+<slug>I./E. HOUSE - DAY</slug>
+
+<sceneheading>I/E HOUSE DAY</sceneheading>
+
+<slug>INT - HOUSE - DAY</slug>
+
+<sceneheading>EXT - HOUSE - DAY</sceneheading>
+
+<slug>EST. HOUSE - DAY</slug>
+
+<sceneheading>EST HOUSE DAY</sceneheading>
+
+<slug>INT. HOUSE - DAY (1979)</slug>
+
+<slug>KITCHEN</slug>
+
+<action>... not a scene header.</action>
+
+<dialogue>
+<character>INT. HOUSE - DAY</character>
+<talk>EXT. HOUSE - DAY</talk>
+</dialogue>
+
+<slug>ESTABLISHING</slug>
+
+<action>int. house - day</action>
+</root>

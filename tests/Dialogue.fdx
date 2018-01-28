@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+<Paragraph Type="Action"><Text>ADAM
+I like to write.</Text></Paragraph>
+
+
+<Paragraph Type="Character"><Text>EVE (O.S.)</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>What kind of writing?</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>ADAM</Text></Paragraph>
+<Paragraph Type="Parenthetical"><Text>(nervous)</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>Screenwriting.</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>EVE</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>ME TOO!</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>EVE (cont'd)</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>I think screenwriting is the best.</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>ADAM</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>That's great. 
+I was really worried you wouldn't 
+like screenwriting.</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>EVE</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>Oh, Adam.</Text></Paragraph>
+<Paragraph Type="Parenthetical"><Text>(kissing him)</Text></Paragraph>
+
+
+<wrap>
+<dialogue class="dual first">
+<Paragraph Type="Character"><Text>ADAM</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>I love you.</Text></Paragraph>
+
+<dialogue class="dual second">
+<Paragraph Type="Character"><Text>EVE</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>You're so stupid.</Text></Paragraph>
+
+</wrap>
+
+
+<Paragraph Type="Character"><Text>R2D2</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>Bleep Boop.</Text></Paragraph>
+<Paragraph Type="Parenthetical"><Text>(*This is a valid character cue.*)</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>23 (O.S.)</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>Character name must include a letter</Text></Paragraph>
+
+
+
+<Paragraph Type="Character"><Text>ADAM</Text></Paragraph>
+<Paragraph Type="Dialogue"><Text>That was really weird.
+I can be weird to. Here's
+a space in the dialogue
+block</Text></Paragraph>
+
+
+<Paragraph Type="Action"><Text>for absolutely no good
+reason.</Text></Paragraph>
+
+<Paragraph Type="Action"><Text>        EVE
+      (feeling cocky)
+    Well, then I'll just indent!</Text></Paragraph>
+</Content>
+</FinalDraft>

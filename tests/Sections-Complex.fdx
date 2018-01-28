@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+
+<Paragraph><ScriptNote><Text>Act 1</Text></ScriptNote></Paragraph>
+<Paragraph><ScriptNote><Text>Synopsis 1</Text></ScriptNote></Paragraph>
+
+<Paragraph Type="Scene Heading"><Text>INT. LOCATION - DAY</Text></Paragraph>
+<Paragraph><ScriptNote><Text>Act 2</Text></ScriptNote></Paragraph>
+<Paragraph><ScriptNote><Text>Sequence 1</Text></ScriptNote></Paragraph>
+
+<Paragraph Type="Action"><Text>INT. LOCATION - DAY</Text></Paragraph>
+</Content>
+</FinalDraft>

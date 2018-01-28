@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+<Paragraph Type="Action" Alignment="Center"><Text>Centered</Text></Paragraph>
+
+<Paragraph Type="Transition"><Text>Not centered</Text></Paragraph>
+
+<Paragraph Type="Action" Alignment="Center"><Text>No space</Text></Paragraph>
+
+<Paragraph Type="Action" Alignment="Center"><Text>Lots of Space		</Text></Paragraph>
+</Content>
+</FinalDraft>

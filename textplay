@@ -22,7 +22,6 @@
 
 
 require 'optparse'
-require 'fcntl'
 
 # Setup the options parser
 options = {}
@@ -823,6 +822,12 @@ text = text.gsub(/^\.(?!\.)[\ \t]*(.*)$/, '<slug>\1</slug>')
 text = text.gsub(/\\\*/, '&#42;')
 
 # Strip-out Fountain Sections and Synopses
+text = text.gsub(/^[ \t]*######[ \t]*(.*)/, "\n" + '<heading6>\1</heading6>' + "\n")
+text = text.gsub(/^[ \t]*#####[ \t]*(.*)/, "\n" + '<heading5>\1</heading5>' + "\n")
+text = text.gsub(/^[ \t]*####[ \t]*(.*)/, "\n" + '<heading4>\1</heading4>' + "\n")
+text = text.gsub(/^[ \t]*###[ \t]*(.*)/, "\n" + '<heading3>\1</heading3>' + "\n")
+text = text.gsub(/^[ \t]*##[ \t]*(.*)/, "\n" + '<heading2>\1</heading2>' + "\n")
+text = text.gsub(/^[ \t]*#[ \t]*(.*)/, "\n" + '<heading1>\1</heading1>' + "\n")
 text = text.gsub(/^[ \t]*#+[ \t]*(.*)/, "\n" + '<note>\1</note>' + "\n")
 text = text.gsub(/^[ \t]*=[ \t]*(.*)/, "\n" + '<note>\1</note>' + "\n")
 # these need not be completely removed simply because they do not span multiple lines
@@ -1040,6 +1045,8 @@ end
 # Final Draft formatting
 if options[:fdx] == true
   text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '')
+  text = text.gsub(/<heading[1-6]>/, '<Paragraph><ScriptNote><Text>')
+  text = text.gsub(/<\/heading[1-6]>/, '</Text></ScriptNote></Paragraph>')
   text = text.gsub(/<note>/, '<Paragraph><ScriptNote><Text>')
   text = text.gsub(/<\/note>/, '</Text></ScriptNote></Paragraph>')
   text = text.gsub(/<b>/, '<Text Style="Bold">')
@@ -1068,6 +1075,8 @@ elsif options[:xml] == true
   text = text
 else
   # default HTML formatting  
+  text = text.gsub(/<heading[1-6]>/, '<p class="comment">')
+  text = text.gsub(/<\/heading[1-6]>/, '</p>')
   text = text.gsub(/<note>/, '<p class="comment">')
   text = text.gsub(/<\/note>/, '</p>')
   text = text.gsub(/<meta_block>(.|\n)+?<\/meta_block>/, '<!--\0-->')

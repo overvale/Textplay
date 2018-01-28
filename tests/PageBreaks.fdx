@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<FinalDraft DocumentType="Script" Template="No" Version="1">
+<Content>
+<Paragraph Type="Action"><Text>Page one.</Text></Paragraph>
+
+<Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>
+
+<Paragraph Type="Action"><Text>Page two.</Text></Paragraph>
+
+<Paragraph Type="Action" StartsNewPage="Yes"><Text></Text></Paragraph>
+
+<Paragraph Type="Action"><Text>Page three.</Text></Paragraph>
+</Content>
+</FinalDraft>

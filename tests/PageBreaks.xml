@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<root>
+<action>Page one.</action>
+
+<page-break />
+
+<action>Page two.</action>
+
+<page-break />
+
+<action>Page three.</action>
+</root>
