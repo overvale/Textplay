@@ -33,10 +33,16 @@
 <note>Synopsis</note>
 
 
-<note>Section 1</note>
+
+
+<heading1>Section 1</heading1>
+
 
 <action>This is in section one.</action>
-<note>Section 1-1</note>
+
+
+<heading2>Section 1-1</heading2>
+
 
 <action>This should be at a higher depth than the previous section.</action>
 

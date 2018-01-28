@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <root>
 
-<note>Act 1</note>
+<heading1>Act 1</heading1>
 <note>Synopsis 1</note>
 
 <sceneheading>INT. LOCATION - DAY</sceneheading>
-<note>Act 2</note>
-<note>Sequence 1</note>
+
+
+<heading1>Act 2</heading1>
+
+
+<heading2>Sequence 1</heading2>
+
 
 <action>INT. LOCATION - DAY</action>
 </root>
