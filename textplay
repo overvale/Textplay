@@ -22,7 +22,6 @@
 
 
 require 'optparse'
-require 'fcntl'
 
 # Setup the options parser
 options = {}
