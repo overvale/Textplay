@@ -777,16 +777,16 @@ xmlEnd = '</root>'
 # Remove any DOS-style line endings:
 text = text.gsub(/\r\n/, "\n")
 
-# Start by completely removing bonyard comments and notes. It is impossible to
-# prevent additional transformations inside them when newlines are present.
-# They must also be removed so they don't interfere with the transformation
-# of adjacent elements.
+# Remove newlines from Boneyards
+text = text.gsub(/\/\*(.|\n)+?\*\//x){|boneyard|
+    boneyard.gsub(/\n+/, ' ')
+}
 
-# Boneyard
-text = text.gsub(/\/\*(.|\n)+?\*\//, '')
+# Remove newlines from Notes
+text = text.gsub(/\[{2}[^\]]+\]{2}/x){|note|
+    note.gsub(/\n+/, ' ')
+}
 
-# Fountain [[notes]]
-text = text.gsub(/\[{2}[^\]]+\]{2}/,'')
 
 # Unfortunately, when you add a note/comment to a line, but don't otherwise
 # change it, textplay will still mark the line as revised because `diff` marks
@@ -837,6 +837,12 @@ end
 # And since Sections, Synopses, and Screenbundle  are non-printing,
 # remove any included revision marks
 text = text.gsub(/({{%}})?(<\/note>)/,'\2')
+
+# Boneyard
+text = text.gsub(/\/\* (.+) \*\//, '<note> \1 </note>')
+
+# Note
+text = text.gsub(/\[{2}(.+)\]{2}/, '<note> \1 </note>')
 
 # -------- Transitions
 # Left-Transitions
