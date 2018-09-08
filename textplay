@@ -597,7 +597,7 @@ margin:0 auto;
 p.center {
 text-align:center;
 margin-left:0;
-width:100%;
+width:90%;
 }
 p {
 margin-top:12pt;
@@ -787,6 +787,9 @@ text = text.gsub(/\[{2}[^\]]+\]{2}/x){|note|
     note.gsub(/\n+/, ' ')
 }
 
+# Encode angle brackets
+#text = text.gsub(/</, '{<}')
+#text = text.gsub(/>/, '{>}')
 
 # Unfortunately, when you add a note/comment to a line, but don't otherwise
 # change it, textplay will still mark the line as revised because `diff` marks
@@ -810,8 +813,6 @@ text = text.gsub(/^[ \t]*([=-]{3,})[ \t]*({{%}})?$/, '<page-break />')
 text = text.gsub(/&/, '&#38;')
 text = text.gsub(/([^-])--([^-])/, '\1&#8209;&#8209;\2')
 text = text.gsub(/^[ \t]+$/, '')
-text = text.gsub(/</, '&#60;')
-text = text.gsub(/>/, '&#62;')
 
 # -------- fountain escapes
 
@@ -1035,6 +1036,10 @@ if options[:diff] == true
         (<\/\2>)
     /x, '\1<revised>\3</revised>\4')
 end
+
+# Decode raw angle brackets
+#text = text.gsub(/{<}/, '&#60;')
+#text = text.gsub(/{>}/, '&#62;')
 
 
 
