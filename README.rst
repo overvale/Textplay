@@ -44,7 +44,12 @@ To make a file use standard Unix redirection. For example::
 As another example, textplay has been tested extensively with `PrinceXML`_.
 To make a PDF from a fountain document, use this::
 
-    textplay < screenplay.fountain | prince - screenplay.pdf
+    textplay < screenplay.fountain | prince - -o screenplay.pdf
+    
+If instead you are using `WeasyPrint`, which should work pretty well as well,
+it works like this::
+
+    textplay < screenplay.fountain | weasyprint - screenplay.pdf
 
 Configuring textplay
 --------------------
