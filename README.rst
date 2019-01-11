@@ -33,7 +33,8 @@ Using textplay
     -s, --snippet     Do not include document headers/footers
     -f, --fdx         Convert to Final Draft .fdx
     -x, --xml         Output as the internal raw XML
-    -w, --wrap        Wrap action and dialogue (see help)
+    -d, --diff        Assume input is a diff, generate revision marks
+    -w, --wrap        Wrap action and dialogue paragraphs
 
 Texplay is designed to be a Unix tool,
 thus it always reads from STDIN and writes to STDOUT.
@@ -44,7 +45,7 @@ To make a file use standard Unix redirection. For example::
 As another example, textplay has been tested extensively with `PrinceXML`_.
 To make a PDF from a fountain document, use this::
 
-    textplay < screenplay.fountain | prince - screenplay.pdf
+    textplay < screenplay.fountain | prince - -o screenplay.pdf
 
 Configuring textplay
 --------------------
