@@ -10,6 +10,7 @@ but it is not perfect, if you encounter a problem please open a `github issue`_.
 Installation
 ------------
 
+- This script requires Ruby, ensure your system has it.
 - Clone this repo somewhere convenient,
 - ``cd`` into that directory,
 - run ``make install``.
