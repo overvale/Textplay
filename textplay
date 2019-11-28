@@ -234,7 +234,7 @@ For more details see the Fountain documentation
 # Some of this is redundant but I prefer specifying every contingency in case I need to control each step
 
 # Check to see if anything is in STDIN
-if STDIN.isatty == TRUE
+if STDIN.isatty == true
 
 	# If nothing is there, check for --help
 	if options[:help] == true
